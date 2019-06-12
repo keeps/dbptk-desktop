@@ -161,7 +161,6 @@ app.on('ready', async function () {
             nodeIntegration: true
         }
     });
-    //mainWindow.loadURL("file://" + app.getAppPath() + '/index.html');
     mainWindow.loadURL(appUrl + "/?branding=false");
     mainWindow.webContents.once('dom-ready', () => {
         console.log('main loaded')
