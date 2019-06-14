@@ -1,7 +1,8 @@
 {
   "name": "dbvtk-gui",
   "description": "Database Preservation Toolkit",
-  "version": "2.0.0",
+  "version": "1.0.0",
+  "dbvtkVersion": "2.0.0",
   "author": "Luis Faria <lfaria@keep.pt>",
   "main": "index.js",
   "build": {

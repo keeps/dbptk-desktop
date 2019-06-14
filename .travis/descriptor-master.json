@@ -1,0 +1,35 @@
+{
+    "package": {
+        "name": "db-visualization-toolkit-electron",
+        "repo": "db-visualization-toolkit",
+        "subject": "keeps",
+        "desc": "Electron deployment for db-visualization-toolkit",
+        "website_url": "http://visualization.database-preservation.com/",
+        "issue_tracker_url": "",
+        "vcs_url": "https://github.com/keeps/db-visualization-toolkit-electron",
+        "github_use_tag_release_notes": true,
+        "github_release_notes_file": "RELEASE.txt",
+        "public_download_numbers": false,
+        "public_stats": false,
+        "licenses": ["LGPL-3.0"]
+    },
+
+    "version": {
+        "name": "VERSION",
+        "description": "",
+        "released": "RELEASED",
+        "vcs_tag": "VERSION",
+        "attributes": [],
+        "gpgSign": false
+    },
+
+    "files":
+    [
+        { "includePattern": "dist/(dbvtk.*.AppImage)$", "uploadPattern": "linux/dbvtk-gui-latest.AppImage", "matrixParams": { "override": 1 } },
+        { "includePattern": "dist/(dbvtk.*.deb)$", "uploadPattern": "linux/dbvtk-gui-latest.deb", "matrixParams": { "override": 1 } },
+        { "includePattern": "dist/(dbvtk.*.exe)$", "uploadPattern": "windows/dbvtk-gui-latest.exe", "matrixParams": { "override": 1 } },
+        { "includePattern": "dist/(dbvtk.*.dmg)$", "uploadPattern": "osx/dbvtk-gui-latest.dmg", "matrixParams": { "override": 1 } }
+    ],
+
+    "publish": true
+}

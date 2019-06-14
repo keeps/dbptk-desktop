@@ -6,7 +6,7 @@ fi
 
 if [ -z "$DBVTK_VERSION" ]; then
     DBVTK_VERSION=$(cat package.json \
-    | grep version \
+    | grep dbvtkVersion \
     | head -1 \
     | awk -F: '{ print $2 }' \
     | sed 's/[",]//g' \
