@@ -25,10 +25,10 @@
 
     "files":
     [
-        { "includePattern": "dist/(dbvtk.*.AppImage)$", "uploadPattern": "linux/dbvtk-gui-latest.AppImage", "matrixParams": { "override": 1 } },
-        { "includePattern": "dist/(dbvtk.*.deb)$", "uploadPattern": "linux/dbvtk-gui-latest.deb", "matrixParams": { "override": 1 } },
-        { "includePattern": "dist/(dbvtk.*.exe)$", "uploadPattern": "windows/dbvtk-gui-latest.exe", "matrixParams": { "override": 1 } },
-        { "includePattern": "dist/(dbvtk.*.dmg)$", "uploadPattern": "osx/dbvtk-gui-latest.dmg", "matrixParams": { "override": 1 } }
+        { "includePattern": "dist/(dbvtk.*.AppImage)$", "uploadPattern": "dbvtk-gui-latest.AppImage", "matrixParams": { "override": 1 } },
+        { "includePattern": "dist/(dbvtk.*.deb)$", "uploadPattern": "dbvtk-gui-latest.deb", "matrixParams": { "override": 1 } },
+        { "includePattern": "dist/(dbvtk.*.exe)$", "uploadPattern": "dbvtk-gui-latest.exe", "matrixParams": { "override": 1 } },
+        { "includePattern": "dist/(dbvtk.*.dmg)$", "uploadPattern": "dbvtk-gui-latest.dmg", "matrixParams": { "override": 1 } }
     ],
 
     "publish": true

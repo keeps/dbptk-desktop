@@ -20,7 +20,21 @@
         "AppImage",
         "deb"
       ]
-    }
+    },
+    "publish" : [
+      {
+        "provider": "bintray",
+        "package": "db-visualization-toolkit-electron",
+        "repo": "db-visualization-toolkit",
+        "owner": "keeps",
+        "user": "006627"
+      },
+      {
+        "provider": "github",
+        "owner": "keeps",
+        "repo": "db-visualization-toolkit-electron"
+      }
+    ]
   },
   "scripts": {
     "start": "./build.sh && ./node_modules/.bin/electron .",
