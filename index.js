@@ -1,3 +1,5 @@
+const { autoUpdater } = require("electron-updater");
+
 var title = 'Title';
 var port = 8080;
 var windowWidth = 1200;
@@ -167,6 +169,8 @@ app.on('ready', async function () {
         mainWindow.show()
         loading.hide()
         loading.close()
+
+        autoUpdater.checkForUpdatesAndNotify()
     })
     mainWindow.on('closed', function () {
         mainWindow = null;

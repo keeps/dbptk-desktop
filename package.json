@@ -8,7 +8,6 @@
   "build": {
     "appId": "com.database-preservation.gui",
     "artifactName": "${name}-${version}.${ext}",
-      
     "asarUnpack": [
       "resources/war/dbvtk.war"
     ],
@@ -17,11 +16,10 @@
     },
     "linux": {
       "target": [
-        "AppImage",
-        "deb"
+        "AppImage"
       ]
     },
-    "publish" : [
+    "publish": [
       {
         "provider": "bintray",
         "package": "db-visualization-toolkit-electron",
@@ -49,6 +47,7 @@
     "electron-packager": "^13.1.1"
   },
   "dependencies": {
+    "electron-updater": "^4.0.6",
     "tmp": "^0.1.0",
     "tree-kill": "^1.2.1",
     "wait-on": "^3.2.0"
