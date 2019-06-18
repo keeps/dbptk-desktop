@@ -1,8 +1,10 @@
 const { dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const Loading = require("./loading");
 
 let updater
 let focusedWindow
+let loading
 autoUpdater.autoDownload = false
 
 autoUpdater.on('error', (error) => {
@@ -18,6 +20,8 @@ autoUpdater.on('update-available', () => {
     }, (buttonIndex) => {
         if (buttonIndex === 0) {
             autoUpdater.downloadUpdate()
+            loading = new Loading()
+            loading.show();
         } else {
             if(updater) {
                 updater.enabled = true
@@ -42,6 +46,7 @@ autoUpdater.on('update-not-available', () => {
 })
 
 autoUpdater.on('update-downloaded', () => {
+    loading.hide();
     dialog.showMessageBox(focusedWindow, {
         type: 'info',
         title: 'Install Updates',

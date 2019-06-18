@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "dbvtkVersion": "2.0.0",
   "author": "Luis Faria <lfaria@keep.pt>",
-  "main": "index.js",
+  "main": "./app/app.js",
   "build": {
     "appId": "com.database-preservation.gui",
     "artifactName": "${name}-${version}.${ext}",
