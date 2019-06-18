@@ -11,13 +11,21 @@
     "asarUnpack": [
       "resources/war/dbvtk.war"
     ],
+    "directories": {
+      "buildResources": "buildResources"
+    },
     "mac": {
-      "category": "public.app-category.utilities"
+      "category": "public.app-category.utilities",
+      "icon": "buildResources/icon.icns"
     },
     "linux": {
       "target": [
         "AppImage"
-      ]
+      ],
+      "icon": "./"
+    },
+    "win": {
+      "icon": "buildResources/icon.ico"
     },
     "publish": [
       {
