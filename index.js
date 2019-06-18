@@ -1,4 +1,4 @@
-const { autoUpdater } = require("electron-updater");
+const { checkForUpdates } = require("./app/components/updater");
 
 var title = 'Title';
 var port = 8080;
@@ -98,7 +98,7 @@ app.on('ready', async function () {
         , height: animationHeight
     });
     console.log(app.getAppPath());
-    loading.loadURL("file://" + app.getAppPath() + '/loading.html');
+    loading.loadURL("file://" + app.getAppPath() + '/app/views/loading.html');
     loading.show();
     loading.webContents.once('dom-ready', () => {
         console.log("Loading...")
@@ -164,13 +164,12 @@ app.on('ready', async function () {
         }
     });
     mainWindow.loadURL(appUrl + "/?branding=false");
+    checkForUpdates(mainWindow)
     mainWindow.webContents.once('dom-ready', () => {
         console.log('main loaded')
         mainWindow.show()
         loading.hide()
         loading.close()
-
-        autoUpdater.checkForUpdatesAndNotify()
     })
     mainWindow.on('closed', function () {
         mainWindow = null;

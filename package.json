@@ -37,8 +37,8 @@
   "scripts": {
     "start": "./build.sh && ./node_modules/.bin/electron .",
     "pack": "./build.sh && electron-builder --dir",
-    "dist": "./build.sh && electron-builder",
-    "dist-lw": "./build.sh && electron-builder -wl"
+    "dist": "./build.sh && electron-builder -p onTag",
+    "dist-lw": "./build.sh && electron-builder -wl -p onTag"
   },
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
