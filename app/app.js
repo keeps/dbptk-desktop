@@ -43,8 +43,9 @@ app.on('ready', async function () {
         , height: windowHeight
         , frame: true,
         webPreferences: {
-            nodeIntegration: true
-        }
+            nodeIntegration: true,
+            preload: app.getAppPath() + '/app/helpers/preloader.js'
+        }        
     });
 
     checkForUpdates(mainWindow)
