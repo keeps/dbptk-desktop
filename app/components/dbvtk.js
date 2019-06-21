@@ -4,6 +4,7 @@ const waitOn = require('wait-on');
 const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
+const { getjavaVersionAndPath } = require('../helpers/javaHelper');
 
 module.exports = class Dbvtk {
     constructor() {
@@ -31,15 +32,8 @@ module.exports = class Dbvtk {
     }
 
     async createProcess() {
-        let platform = process.platform;
-        let javaPath = 'java'
-
-        if (platform === 'win32') {
-            javaPath = this.windowsJavaPath;
-        } else if (platform === 'darwin') {
-            javaPath = this.darwinJavaPath;
-        }
-
+        let java = getjavaVersionAndPath();
+        
         let serverPortFile = tmp.tmpNameSync();
         console.log("Port file at " + serverPortFile);
 
@@ -49,7 +43,7 @@ module.exports = class Dbvtk {
         // Ask for a random unassigned port and to write it down in serverPortFile
         var javaVMParameters = ["-Dserver.port=0", "-Dserver.port.file=" + serverPortFile];
 
-        this.process = spawn(javaPath, ['-jar'].concat(javaVMParameters).concat("resources/war/" + this.filename), {
+        this.process = spawn(java.path, ['-jar'].concat(javaVMParameters).concat("resources/war/" + this.filename), {
             cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/'
         });
 
