@@ -31,21 +31,23 @@ app.on('ready', async function () {
         console.log(error);
         dialog.showErrorBox(
             'Oops! Something went wrong!',
-             error.message
+            error.message
         )
         app.exit()
     }
 
     // Open window with app
     mainWindow = new BrowserWindow({
-        title: title
-        , width: windowWidth
-        , height: windowHeight
-        , frame: true,
+        title: title,
+        frame: true,
+        width: windowWidth,
+        height: windowHeight,
+        minHeight: 500,
+        minWidth: 492,
         webPreferences: {
             nodeIntegration: true,
             preload: app.getAppPath() + '/app/helpers/preloader.js'
-        }        
+        }
     });
 
     checkForUpdates(mainWindow)

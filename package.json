@@ -8,6 +8,11 @@
   "build": {
     "appId": "com.database-preservation.gui",
     "artifactName": "${name}-${version}.${ext}",
+    "files": [
+      "**/*",
+      "!resources/jre/*",
+      "!dist/*"
+    ],
     "asarUnpack": [
       "resources/war/dbvtk.war"
     ],
@@ -15,26 +20,37 @@
       "buildResources": "buildResources"
     },
     "mac": {
+      "files": ["resources/jre/mac/${arch}/**/*"],
       "category": "public.app-category.utilities",
+      "asarUnpack": [
+        "resources/jre/mac/${arch}"
+      ],
       "icon": "buildResources/icon.icns"
     },
     "linux": {
+      "files": ["resources/jre/linux/${arch}/**/*"],
       "target": [
         "AppImage"
+      ],
+      "asarUnpack": [
+        "resources/jre/linux/${arch}"
       ],
       "icon": "./"
     },
     "win": {
+      "files": ["resources/jre/windows/${arch}/**/*"],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [ "ia32", "x64" ]
+        }
+      ],
+      "asarUnpack": [
+        "resources/jre/windows/${arch}"
+      ],
       "icon": "buildResources/icon.ico"
     },
     "publish": [
-      {
-        "provider": "bintray",
-        "package": "db-visualization-toolkit-electron",
-        "repo": "db-visualization-toolkit",
-        "owner": "keeps",
-        "user": "006627"
-      },
       {
         "provider": "github",
         "owner": "keeps",
@@ -43,10 +59,11 @@
     ]
   },
   "scripts": {
-    "start": "./build.sh && ./node_modules/.bin/electron .",
-    "pack": "./build.sh && electron-builder --dir",
-    "dist": "./build.sh && electron-builder -p onTag",
-    "dist-lw": "./build.sh && electron-builder -wl -p onTag"
+    "start": "./node_modules/.bin/electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder -p onTagOrDraft",
+    "dist-lw": "electron-builder -wl -p onTagOrDraft",
+    "preinstall": "./build.sh"
   },
   "license": "LGPL-3.0-or-later",
   "devDependencies": {

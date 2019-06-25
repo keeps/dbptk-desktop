@@ -24,31 +24,16 @@ cache:
 script:
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      sed -ri "s/VERSION/$TRAVIS_BRANCH/g" .travis/descriptor*.json
-      sed -ri "s/RELEASED/`date "+%d-%m-%y"`/g" .travis/descriptor*.json
       docker run --rm \
         --env GH_TOKEN="${GH_TOKEN}" \
-        --env BT_TOKEN="${BT_TOKEN}" \
         -v ${PWD}:/project \
         -v ~/.cache/electron:/root/.cache/electron \
         -v ~/.cache/electron-builder:/root/.cache/electron-builder \
         electronuserland/builder:wine \
         /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn dist-lw"
     else
-      sed -Ei "" "s/VERSION/$TRAVIS_BRANCH/g" .travis/descriptor*.json
-      sed -Ei "" "s/RELEASED/`date "+%d-%m-%y"`/g" .travis/descriptor*.json
       yarn && yarn dist
     fi
 
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
-
-deploy:
-  - provider: bintray
-    file: ".travis/descriptor-master.json"
-    user: '006627'
-    key:
-      secure: GOnkV8ML7Ku+vyfdLw6+UOsht/UhT/p57jBV2nR2bavDm9Cdwe/x9TBZIWEixANyKOnAsLNgElUwHUWz5gzaaZVEoHafqO+VYNDcw8KjIjcHyATcpMDGeAlaqL/nkwl9cMj44WEFUdYIDEspLtgVN9DQ4Xxm76g6yqBMfhpBel/KVeOiGKrDdoytf6/YPS9HzVdAO85PMNoODkUBa6y3Ob9kpBihiGXajia268od8zmUQ7SHD3KSciD1Bt4/Ge9ADuqR6ADj2oySGqw78tpTJIjkTqVIlxLReUDyr0ogeMVVymSg/fuDxeiSuyZVJbYDeVB6yISzBX8/fF6W/A4vwPYlt2G70nvwTcMRXCoalN4HOYSaHH/QWJRmlp0pGcmDu4yeqkwU30m9poR7QpR887k6dgowpfkCEhXL/SIyJ+vxq5FXQvcmFoLcK2+mpdezB74sozwRVZXxmOnhOVB3aWUeiT4hG4RivvjWPnJ1GKoUGDcA99E9cB+DBoB0A8jvTAKL1lEGmiMvpTja5wU7f/ewvq3wE5ni6zIUzzQYHlsUIYJIrBD/Z0+av42AYsr9w9tcAvZlQYxoOHpmotlrld0dSUW7v7m59NyK/cIgtn5vR3O8dGUD0h9u/e1OzXjsxrPRWHWB5D6LuYcRL7nz3pBvMF/NzMS65I3Dy5US2aU=
-    skip_cleanup: true
-    on:
-      branch: master
