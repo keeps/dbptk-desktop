@@ -4,6 +4,7 @@ const waitOn = require('wait-on');
 const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
+const os = require("os");
 const { getjavaVersionAndPath } = require('../helpers/javaHelper');
 
 module.exports = class Dbvtk {
@@ -33,15 +34,24 @@ module.exports = class Dbvtk {
 
     async createProcess() {
         let java = getjavaVersionAndPath();
-        
+
         let serverPortFile = tmp.tmpNameSync();
         console.log("Port file at " + serverPortFile);
 
         let jvmLog = tmp.tmpNameSync();
         console.log("JVM log at " + jvmLog);
 
+        // get 3/4th of physical memory for set maximum heap size
+        // This value must be a multiple of 1024
+        let maxHeapMemory = Math.floor(os.totalmem() * 3 / (4 * 1024)) * 1024;
+        console.log("Max HEAP: " + (maxHeapMemory / Math.pow(1024, 3)).toFixed(2) + " GB");
+
         // Ask for a random unassigned port and to write it down in serverPortFile
-        var javaVMParameters = ["-Dserver.port=0", "-Dserver.port.file=" + serverPortFile];
+        let javaVMParameters = [
+            "-Dserver.port=0",
+            "-Dserver.port.file=" + serverPortFile,
+            "-Xmx" + maxHeapMemory
+        ];
 
         this.process = spawn(java.path, ['-jar'].concat(javaVMParameters).concat("resources/war/" + this.filename), {
             cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/'

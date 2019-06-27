@@ -1,5 +1,26 @@
 # db-visualization-toolkit-electron
-Electron deployment for [db-visualization-toolkit](https://github.com/keeps/db-visualization-toolkit)
+
+A cross-platform app built on [Electron](http://electronjs.org) that uses [Database Visualization Toolkit](https://github.com/keeps/db-visualization-toolkit) as a viewer for relational databases.
+
+## Installing
+
+You can download the latest release for your operating system [here](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest).
+
+
+#### For Linux
+- Download [AppImage](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest) file
+- Use chmod u+x on the downloaded file to make it executable.
+
+#### For Mac
+- Download [dmg](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest) file
+- Double-click on the downloaded file to expand the contents.
+- Drag dbvtk-gui to the Applications folder
+
+#### For Windows
+- Download [exe](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest) file
+- Once it is downloaded, run the installer (dbvtk-gui.exe).
+
+**This app will automatically update when a new release is available.**
 
 ## Building
 You'll need [Node.js](https://nodejs.org) installed on your computer in order to build this app.
@@ -21,7 +42,7 @@ More information about these tools can be found at http://database-preservation.
 
 ## To report a problem or make a suggestion
 
-Create a new issue at https://github.com/keeps/db-visualization-toolkit/issues/new
+Create a new issue at https://github.com/keeps/db-visualization-toolkit-electron/issues/new
 
 Or if the problem/suggestion is related to the Database Preservation Toolkit, create the issue at https://github.com/keeps/db-preservation-toolkit/issues/new
 
@@ -29,7 +50,7 @@ Or if the problem/suggestion is related to the Database Preservation Toolkit, cr
 
 For more information or commercial support, contact [KEEP SOLUTIONS](http://www.keep.pt/contactos/?lang=en).
 
-## Development [![Build Status](https://travis-ci.org/keeps/db-visualization-toolkit.png?branch=master)](https://travis-ci.org/keeps/db-visualization-toolkit)
+## Development [![Build Status](https://travis-ci.org/keeps/db-visualization-toolkit-electron.png?branch=master)](https://travis-ci.org/keeps/db-visualization-toolkit-electron)
 
 ## License
 
