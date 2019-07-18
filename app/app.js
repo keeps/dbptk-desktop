@@ -1,6 +1,7 @@
 const { checkForUpdates } = require("./components/updater");
 const { app, BrowserWindow, globalShortcut, dialog } = require('electron');
 const Loading = require("./components/loading");
+const ApplicationMenu = require("./components/application-menu");
 const Dbvtk = require("./components/dbvtk");
 
 let title = 'Database Visualization Toolkit';
@@ -9,6 +10,7 @@ let windowHeight = 800;
 let mainWindow = null;
 let serverProcess = null;
 let otherInstanceOpen = !app.requestSingleInstanceLock();
+let debug = process.env.TK_DEBUG;
 
 if (otherInstanceOpen) {
     console.log("Already open...")
@@ -23,17 +25,21 @@ app.on('ready', async function () {
 
     let server = new Dbvtk();
 
-    try {
-        server.getWarFile();
-        await server.createProcess();
-        serverProcess = server.process;
-    } catch (error) {
-        console.log(error);
-        dialog.showErrorBox(
-            'Oops! Something went wrong!',
-            error.message
-        )
-        app.exit()
+    if(!debug){
+        try {
+            server.getWarFile();
+            await server.createProcess();
+            serverProcess = server.process;
+        } catch (error) {
+            console.log(error);
+            dialog.showErrorBox(
+                'Oops! Something went wrong!',
+                error.message
+            )
+            app.exit()
+        }
+    } else {
+        server.appUrl = server.appUrl + ":" + server.port;
     }
 
     // Open window with app
@@ -58,6 +64,7 @@ app.on('ready', async function () {
         mainWindow.show()
         loading.hide();
     })
+    new ApplicationMenu().createMenu(mainWindow.webContents, debug);
 
     mainWindow.on('closed', function () {
         mainWindow = null;

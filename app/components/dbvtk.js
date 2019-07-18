@@ -44,13 +44,14 @@ module.exports = class Dbvtk {
         // get 3/4th of physical memory for set maximum heap size
         // This value must be a multiple of 1024
         let maxHeapMemory = Math.floor(os.totalmem() * 3 / (4 * 1024)) * 1024;
-        console.log("Max HEAP: " + (maxHeapMemory / Math.pow(1024, 3)).toFixed(2) + " GB");
+        // console.log("Max HEAP: " + (maxHeapMemory / Math.pow(1024, 3)).toFixed(2) + " GB");
 
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [
             "-Dserver.port=0",
             "-Dserver.port.file=" + serverPortFile,
-            "-Xmx" + maxHeapMemory
+            // "-Xmx" + maxHeapMemory,  
+            "-Denv=Desktop",
         ];
 
         this.process = spawn(java.path, ['-jar'].concat(javaVMParameters).concat("resources/war/" + this.filename), {
