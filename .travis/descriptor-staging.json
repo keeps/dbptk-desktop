@@ -15,20 +15,18 @@
     },
 
     "version": {
-        "name": "VERSION",
+        "name": "Staging",
         "description": "",
         "released": "RELEASED",
-        "vcs_tag": "VERSION",
+        "vcs_tag": "Staging",
         "attributes": [],
         "gpgSign": false
     },
 
     "files":
     [
-        { "includePattern": "dist/(dbvtk.*.AppImage)$", "uploadPattern": "dbvtk-gui-VERSION.AppImage", "matrixParams": { "override": 1 } },
-        { "includePattern": "dist/(dbvtk.*.deb)$", "uploadPattern": "dbvtk-gui-VERSION.deb", "matrixParams": { "override": 1 } },
-        { "includePattern": "dist/(dbvtk.*.exe)$", "uploadPattern": "dbvtk-gui-VERSION.exe", "matrixParams": { "override": 1 } },
-        { "includePattern": "dist/(dbvtk.*.dmg)$", "uploadPattern": "dbvtk-gui-VERSION.dmg", "matrixParams": { "override": 1 } }
+        { "includePattern": "dist/(dbvtk.*.AppImage)$", "uploadPattern": "dbvtk-gui-staging.AppImage", "matrixParams": { "override": 1 } },
+        { "includePattern": "dist/(dbvtk.*.dmg)$", "uploadPattern": "dbvtk-gui-staging.dmg", "matrixParams": { "override": 1 } }
     ],
 
     "publish": true

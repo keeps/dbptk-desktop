@@ -20,7 +20,9 @@
       "buildResources": "buildResources"
     },
     "mac": {
-      "files": ["resources/jre/mac/${arch}/**/*"],
+      "files": [
+        "resources/jre/mac/${arch}/**/*"
+      ],
       "category": "public.app-category.utilities",
       "asarUnpack": [
         "resources/jre/mac/${arch}"
@@ -28,7 +30,9 @@
       "icon": "buildResources/icon.icns"
     },
     "linux": {
-      "files": ["resources/jre/linux/${arch}/**/*"],
+      "files": [
+        "resources/jre/linux/${arch}/**/*"
+      ],
       "target": [
         "AppImage"
       ],
@@ -38,11 +42,16 @@
       "icon": "./"
     },
     "win": {
-      "files": ["resources/jre/windows/${arch}/**/*"],
+      "files": [
+        "resources/jre/windows/${arch}/**/*"
+      ],
       "target": [
         {
           "target": "nsis",
-          "arch": [ "ia32", "x64" ]
+          "arch": [
+            "ia32",
+            "x64"
+          ]
         }
       ],
       "asarUnpack": [
@@ -72,6 +81,7 @@
     "electron-packager": "^13.1.1"
   },
   "dependencies": {
+    "clean": "^4.0.2",
     "electron-updater": "^4.0.6",
     "tmp": "^0.1.0",
     "tree-kill": "^1.2.1",

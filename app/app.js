@@ -42,6 +42,12 @@ app.on('ready', async function () {
         server.appUrl = server.appUrl + ":" + server.port;
     }
 
+    // Use 90% of screen size
+    const screen = require('electron').screen
+    const { width, height } = screen.getPrimaryDisplay().workAreaSize
+    windowWidth = Math.round(width *0.9 );
+    windowHeight = Math.round(height *0.9);
+
     // Open window with app
     mainWindow = new BrowserWindow({
         title: title,
@@ -55,6 +61,8 @@ app.on('ready', async function () {
             preload: app.getAppPath() + '/app/helpers/preloader.js'
         }
     });
+
+    mainWindow.unmaximize()
 
     checkForUpdates(mainWindow)
 
