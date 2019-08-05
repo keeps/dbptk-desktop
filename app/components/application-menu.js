@@ -1,8 +1,10 @@
 const { app, Menu, MenuItem, shell, BrowserWindow } = require('electron');
+const settings = require('electron-settings');
 
 
 
 function buildUrl(win, language, path) {
+    settings.set('general',{'language': language});
     let currLocation = win.webContents.getURL();
     let locArray = currLocation.split("#")[0].split("?");
     return locArray[0] + "?locale=" + language + path
@@ -10,64 +12,86 @@ function buildUrl(win, language, path) {
 
 module.exports = class ApplicationMenu {
     constructor() {
-        this.language = "en";
+        this.language = settings.get('general.language')!= null ? settings.get('general.language') : "en";
+        this.template;
     }
+
     createMenu(win, debug) {
 
-        var menu = Menu.buildFromTemplate([
-            {
-                label: 'Home',
-                click: () => {
-                    win.loadURL(buildUrl(win, this.language, "#home"));
-                }
-            },
-            {
-                label: 'Create',
-                click: () => {
-                    win.loadURL(buildUrl(win, this.language, "#create"));
-                }
-            },
-            {
-                label: 'Manage',
-                click: () => {
-                    win.loadURL(buildUrl(win, this.language, "#database"));
-                }
-            },
-            {
-                label: 'Help',
-                role: 'help',
-                submenu: [{
-                    label: 'Language',
-                    role: 'language',
-                    submenu: [
-                        {
-                            label: 'Português Europeu',
-                            type: 'radio',
-                            click: () => {
-                                this.language = "pt_PT"
-                                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
-                            },
-                        }, {
-                            label: 'English',
-                            type: 'radio', checked: true,
-                            click: () => {
-                                this.language = "en"
-                                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
-                            },
-                        }
-                    ]
-                },
-                { type: 'separator' },
-                {
-                    label: 'Learn More',
-                    click: () => {
-                        shell.openExternal('https://visualization.database-preservation.com/')
-                    }
-                },
-                ]
+        const homeMenu = {
+            label: 'Home',
+            click: () => {
+                win.loadURL(buildUrl(win, this.language, "#home"));
             }
-        ])
+        };
+    
+        const createMenu = {
+            label: 'Create',
+            click: () => {
+                win.loadURL(buildUrl(win, this.language, "#create"));
+            }
+        };
+    
+        const manageMenu = {
+            label: 'Manage',
+            click: () => {
+                win.loadURL(buildUrl(win, this.language, "#database"));
+            }
+        };
+    
+        const helpMenu = {
+            label: 'Help',
+            role: 'help',
+            submenu: [{
+                label: 'Language',
+                role: 'language',
+                submenu: [
+                    {
+                        label: 'Português Europeu',
+                        type: 'radio',
+                        click: () => {
+                            this.language = "pt_PT"
+                            win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+                        },
+                    }, {
+                        label: 'English',
+                        type: 'radio', checked: true,
+                        click: () => {
+                            this.language = "en"
+                            win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+                        },
+                    }
+                ]
+            },
+            { type: 'separator' },
+            {
+                label: 'Learn More',
+                click: () => {
+                    shell.openExternal('https://visualization.database-preservation.com/')
+                }
+            },
+            ]
+        }
 
+        const template = [
+        //For MacOS
+        ...(process.platform === 'darwin' ? [{
+            label: app.getName(),
+            submenu: [
+                homeMenu,
+                createMenu,
+                manageMenu,
+            ]
+        }] : []),
+            homeMenu,
+            createMenu,
+            manageMenu,
+            helpMenu
+        ]
+    
+        var menu = Menu.buildFromTemplate(template)
+
+        // set TK_DEBUG=1 for use debug mode
         if (debug) {
             menu.append(new MenuItem({
                 label: 'Debug',

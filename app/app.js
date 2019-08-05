@@ -3,6 +3,7 @@ const { app, BrowserWindow, globalShortcut, dialog } = require('electron');
 const Loading = require("./components/loading");
 const ApplicationMenu = require("./components/application-menu");
 const Dbvtk = require("./components/dbvtk");
+const settings = require('electron-settings');
 
 let title = 'Database Visualization Toolkit';
 let windowWidth = 1200;
@@ -42,6 +43,7 @@ app.on('ready', async function () {
         server.appUrl = server.appUrl + ":" + server.port;
     }
 
+    const language = settings.get('general.language')!= null ? settings.get('general.language') : "en";
     // Use 90% of screen size
     const screen = require('electron').screen
     const { width, height } = screen.getPrimaryDisplay().workAreaSize
@@ -66,7 +68,7 @@ app.on('ready', async function () {
 
     checkForUpdates(mainWindow)
 
-    mainWindow.loadURL(server.appUrl + "/?branding=false");
+    mainWindow.loadURL(server.appUrl + "/?branding=false&locale=" + language);
     mainWindow.webContents.once('dom-ready', () => {
         console.log('main loaded')
         mainWindow.show()
