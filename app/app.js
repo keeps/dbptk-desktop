@@ -56,8 +56,8 @@ app.on('ready', async function () {
         frame: true,
         width: windowWidth,
         height: windowHeight,
-        minHeight: 500,
-        minWidth: 492,
+        minHeight: 720,
+        minWidth: 800,
         webPreferences: {
             nodeIntegration: true,
             preload: app.getAppPath() + '/app/helpers/preloader.js'
