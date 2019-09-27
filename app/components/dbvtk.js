@@ -49,6 +49,7 @@ module.exports = class Dbvtk {
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [
             "-Dserver.port=0",
+            "-Dfile.encoding=UTF-8",
             "-Dserver.port.file=" + serverPortFile,
             // "-Xmx" + maxHeapMemory,  
             "-Denv=Desktop",
