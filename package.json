@@ -34,12 +34,21 @@
         "resources/jre/linux/${arch}/**/*"
       ],
       "target": [
-        "AppImage"
+        "AppImage",
+        "snap"
       ],
       "asarUnpack": [
         "resources/jre/linux/${arch}"
       ],
       "icon": "./"
+    },
+    "snap": {
+      "plugs": [
+        "home"
+      ],
+      "after": [
+        "desktop-gtk3"
+      ]
     },
     "win": {
       "files": [
@@ -70,14 +79,14 @@
   "scripts": {
     "start": "./node_modules/.bin/electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -p always",
-    "dist-lw": "electron-builder -wl -p always",
+    "dist": "electron-builder",
+    "dist-lw": "electron-builder -lw",
     "preinstall": "./build.sh"
   },
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
     "electron": "4.2.5",
-    "electron-builder": "^20.43.0",
+    "electron-builder": "^20.44.0",
     "electron-packager": "^13.1.1"
   },
   "dependencies": {

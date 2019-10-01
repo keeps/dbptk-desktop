@@ -58,6 +58,9 @@ autoUpdater.on('update-downloaded', () => {
 })
 
 module.exports.checkForUpdates = function (window) {
+    if(process.env.SNAP){
+        return
+    }
     focusedWindow = window
     autoUpdater.checkForUpdates()
 }

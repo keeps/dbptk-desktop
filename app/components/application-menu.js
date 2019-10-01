@@ -70,6 +70,21 @@ module.exports = class ApplicationMenu {
                     shell.openExternal('https://visualization.database-preservation.com/')
                 }
             },
+            {
+                label: 'Toggle Developer Tools',
+                accelerator: (() => {
+                    if (process.platform === 'darwin') {
+                        return 'Alt+Command+I'
+                    } else {
+                        return 'Ctrl+Shift+I'
+                    }
+                })(),
+                click: (item, focusedWindow) => {
+                    if (focusedWindow) {
+                        focusedWindow.toggleDevTools()
+                    }
+                }
+            },
             ]
         }
 
