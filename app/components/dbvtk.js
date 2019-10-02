@@ -54,6 +54,10 @@ module.exports = class Dbvtk {
             // "-Xmx" + maxHeapMemory,  
             "-Denv=Desktop",
         ];
+        if(process.env.SNAP_USER_COMMON){
+            console.log("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
+            javaVMParameters.push("-Ddbvtk.home=" + process.env.SNAP_USER_COMMON);
+        }
 
         this.process = spawn(java.path, ['-jar'].concat(javaVMParameters).concat("resources/war/" + this.filename), {
             cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/'

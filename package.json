@@ -44,10 +44,18 @@
     },
     "snap": {
       "plugs": [
-        "home"
-      ],
-      "after": [
-        "desktop-gtk3"
+        "desktop",
+        "desktop-legacy",
+        "wayland",
+        "unity7",
+        "browser-support",
+        "cups-control",
+        "gsettings",
+        "home",
+        "network",
+        "opengl",
+        "removable-media",
+        "optical-drive"
       ]
     },
     "win": {
@@ -86,7 +94,7 @@
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
     "electron": "4.2.5",
-    "electron-builder": "^20.44.0",
+    "electron-builder": "^21.2.0",
     "electron-packager": "^13.1.1"
   },
   "dependencies": {
