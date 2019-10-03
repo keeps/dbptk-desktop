@@ -19,7 +19,8 @@ else
     #For Dev Branch
     echo "Logic for staging"
     DBVTK="dbvtk-staging.war"
-    DEPLOY="staging"
+    #DEPLOY="staging"
+    DEPLOY="master"
 fi
 
 echo $DBVTK

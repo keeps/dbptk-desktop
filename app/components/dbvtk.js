@@ -10,8 +10,6 @@ const { getjavaVersionAndPath } = require('../helpers/javaHelper');
 module.exports = class Dbvtk {
     constructor() {
         this.filename = null;
-        this.windowsJavaPath = 'java.exe';
-        this.darwinJavaPath = 'java';
         this.port = 8080;
         this.appUrl = "http://localhost";
         this.process = null

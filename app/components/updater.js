@@ -8,7 +8,8 @@ let loading
 autoUpdater.autoDownload = false
 
 autoUpdater.on('error', (error) => {
-    dialog.showErrorBox('Error; ', error == null ? "unknown" : (error.stack || error).toString());
+    //dialog.showErrorBox('Error; ', error == null ? "unknown" : (error.stack || error).toString());
+    //TODO: create log for electron
 })
 
 autoUpdater.on('update-available', () => {
