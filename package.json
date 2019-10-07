@@ -87,8 +87,9 @@
   "scripts": {
     "start": "./node_modules/.bin/electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder",
-    "dist-lw": "electron-builder -lw",
+    "dist": "electron-builder -p onTagOrDraft",
+    "dist-lw": "electron-builder -l AppImage -w -p onTagOrDraft",
+    "dist-snap": "electron-builder -l snap",
     "preinstall": "./build.sh"
   },
   "license": "LGPL-3.0-or-later",
