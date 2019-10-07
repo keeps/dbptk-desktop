@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
 const os = require("os");
-const { getjavaVersionAndPath } = require('../helpers/javaHelper');
+const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
 
 module.exports = class Dbvtk {
     constructor() {
@@ -37,6 +37,7 @@ module.exports = class Dbvtk {
         console.log("Port file at " + serverPortFile);
 
         let jvmLog = tmp.tmpNameSync();
+        setJvmLog(jvmLog);
         console.log("JVM log at " + jvmLog);
 
         // get 3/4th of physical memory for set maximum heap size

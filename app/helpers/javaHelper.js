@@ -1,9 +1,10 @@
 const { spawnSync } = require('child_process');
 const { app } = require('electron');
 
+let java = {path:'java', version:null, os:"linux", exec: 'bin/java', jvmLog: null}
+
 module.exports.getjavaVersionAndPath = function () {        
     let platform = process.platform;
-    let java = {path:'java', version:null, os:"linux", exec: 'bin/java'}
 
     if (platform === 'win32') {
         java.os = "windows"
@@ -22,6 +23,14 @@ module.exports.getjavaVersionAndPath = function () {
     console.log("Java Path is: " + java.path);
 
     return java;
+}
+
+module.exports.setJvmLog = function (path) {
+  java.jvmLog = path;
+}
+
+module.exports.getJvmLog = function () {
+  return java.jvmLog;
 }
 
 function getJavaVersion(path){
