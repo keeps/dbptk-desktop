@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Settings</title>
+    <style>
+        html {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            height: 100%;
+            margin: 0px;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .header {
+            height: 50px;
+            color: white;
+            background: #089de3;
+            text-align: center;
+            font-size: 28px;
+            line-height: 50px;
+        }
+
+        .content {
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            padding: 70px 10% 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .settings {
+            width: 100%;
+        }
+
+        .setting-item {
+            margin-bottom: 15px;
+        }
+
+        .setting-context{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            height: 27px;
+            line-height: 27px
+        }
+
+        .setting-context .label {
+            color: #5a5a5a;
+            width: 30%;
+        }
+
+        .setting-context .value {
+            width: 70%;
+            display: flex;
+        }
+
+        .setting-info {
+            padding: 5px 0;
+            color: #949494;
+        }
+
+        #notification {
+            width: 100%;
+            height: 27px;
+            color: #089de3;
+            display: none;
+            border-radius: 3px;
+            text-align: center;
+        }
+
+        .button,
+        a.button,
+        button,
+        [type='button'],
+        [type='submit'] {
+            font-size: 12px;
+            border-radius: 2px;
+            padding: 8px 8px;
+            margin: 10;
+            border: none;
+            background-color: #089de3;
+            color: white;
+            font-weight: 600;
+            overflow: hidden;
+            text-align: left;
+            text-overflow: ellipsis;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        button:disabled {
+            background-color: #ddd;
+        }
+
+
+        .select {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .select select {
+            font-family: 'Arial';
+            display: inline-block;
+            width: 100%;
+            cursor: pointer;
+            padding: 6px 15px;
+            outline: 0;
+            border: 0px solid #000000;
+            border-radius: 5px;
+            background: #e8e8e8;
+            color: #7b7b7b;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .select select::-ms-expand {
+            display: none;
+        }
+
+        .select_arrow {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            pointer-events: none;
+            border-style: solid;
+            border-width: 8px 5px 0px 5px;
+            border-color: #7b7b7b transparent transparent transparent;
+        }
+
+        .select select:disabled~.select_arrow {
+            border-top-color: #cccccc;
+        }
+
+        .memoryLabelSize{
+            margin-left: 3px;
+            color: #5a5a5a;
+        }
+
+        #memoryDisplay {
+            width: 20%;
+            border: none;
+            text-align: right;
+            font-size: 14px;
+            line-height: 27px;
+            color: #5a5a5a;
+        }
+
+        .slider {
+            -webkit-appearance: none;
+            width: 75%;
+            margin-top: 9px;
+            height: 10px;
+            border-radius: 5px;
+            background: #e8e8e8;
+            outline: none;
+            opacity: 0.7;
+            -webkit-transition: .2s;
+            transition: opacity .2s;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #089de3;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #089de3;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">Settings</div>
+        <div class="content">
+            <div class="settings">
+                <div class="setting-item">
+                    <div class="setting-context">
+                        <span class="label">Language</span>
+                        <div class="value">
+                            <div class="select">
+                                <select name="language" id="language">
+                                    <option value="en">English</option>
+                                    <option value="pt_PT">Português Europeu</option>
+                                </select>
+                                <div class="select_arrow"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-context">
+                        <span class="label">Memory</span>
+                        <div class="value">
+                            <input id="memory" name="memory" type="range" name="points" min="0" max="10" class="slider">
+                            <input for="memory" id="memoryDisplay"></input>
+                            <label for="memory" class="memoryLabelSize">GB</label>
+                        </div>
+                    </div>
+                    <div class="setting-info">The memory allocated for the main application (minimum value is 250mb).</div>
+                </div>
+                <div id="notification">
+                    <span>These changes will become effective after you restart the application</span>
+                </div>
+            </div>
+            <div class="navigation">
+                <button id="close">Close</button>
+                <button id="apply" disabled>Apply</button>
+            </div>
+        </div>
+    </div>
+    <script src="renderer/settingsRenderer.js"></script>
+</body>
+
+</html>

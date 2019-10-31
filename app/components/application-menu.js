@@ -1,10 +1,11 @@
 const { app, Menu, MenuItem, shell } = require('electron');
 const { getJvmLog } = require('../helpers/javaHelper');
-const settings = require('electron-settings');
+const Settings = require('./settings');
+const electronSettings = require('electron-settings');
 const path = require('path');
 
 function buildUrl(win, language, path) {
-  settings.set('general', { 'language': language });
+  electronSettings.set('language', language);
   let currLocation = win.webContents.getURL();
   let locArray = currLocation.split("#")[0].split("?");
   return locArray[0] + "?locale=" + language + path
@@ -12,7 +13,7 @@ function buildUrl(win, language, path) {
 
 module.exports = class ApplicationMenu {
   constructor() {
-    this.language = settings.get('general.language') != null ? settings.get('general.language') : "en";
+    this.language = electronSettings.get('language') != null ? electronSettings.get('general.language') : "en";
     this.template;
   }
 
@@ -40,8 +41,8 @@ module.exports = class ApplicationMenu {
     };
 
     const optionsMenu = {
-      label: 'Options',
-      role: 'options',
+      label: 'Preferences',
+      role: 'preferences',
       submenu: [
         {
           label: 'Language',
@@ -50,19 +51,28 @@ module.exports = class ApplicationMenu {
             {
               label: 'Português Europeu',
               type: 'radio',
+              checked: (electronSettings.get('language') == 'pt_PT'),
               click: () => {
                 this.language = "pt_PT"
                 win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
               },
             }, {
               label: 'English',
-              type: 'radio', checked: true,
+              type: 'radio', 
+              checked: (electronSettings.get('language') == null || electronSettings.get('language') == 'en'),
               click: () => {
                 this.language = "en"
                 win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
               },
             }
           ]
+        },
+        {
+          label: 'Settings',
+          accelerator: 'CmdOrCtrl+P',
+          click: () => {
+            new Settings().show()
+          }
         }
       ]
     }

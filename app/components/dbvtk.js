@@ -4,8 +4,8 @@ const waitOn = require('wait-on');
 const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
-const os = require("os");
 const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
+const MemoryManager = require('../helpers/memoryManagerHelper');
 
 module.exports = class Dbvtk {
     constructor() {
@@ -40,18 +40,16 @@ module.exports = class Dbvtk {
         setJvmLog(jvmLog);
         console.log("JVM log at " + jvmLog);
 
-        // get 3/4th of physical memory for set maximum heap size
-        // This value must be a multiple of 1024
-        let maxHeapMemory = Math.floor(os.totalmem() * 3 / (4 * 1024)) * 1024;
-        // console.log("Max HEAP: " + (maxHeapMemory / Math.pow(1024, 3)).toFixed(2) + " GB");
+        let memoryManager = new MemoryManager()
+        let maxHeapMemory = memoryManager.getMaxHeapMemorySettings();
 
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [
             "-Dserver.port=0",
             "-Dfile.encoding=UTF-8",
             "-Dserver.port.file=" + serverPortFile,
-            // "-Xmx" + maxHeapMemory,  
-            "-Denv=Desktop",
+            "-Xmx" + maxHeapMemory,
+            "-Denv=desktop",
         ];
         if(process.env.SNAP_USER_COMMON){
             console.log("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);

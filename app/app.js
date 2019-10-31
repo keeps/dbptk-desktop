@@ -43,12 +43,13 @@ app.on('ready', async function () {
         server.appUrl = server.appUrl + ":" + server.port;
     }
 
-    const language = settings.get('general.language')!= null ? settings.get('general.language') : "en";
+    const language = settings.get('language')!= null ? settings.get('language') : "en";
     // Use 90% of screen size
+    const screenSize = 0.9;
     const screen = require('electron').screen
     const { width, height } = screen.getPrimaryDisplay().workAreaSize
-    windowWidth = Math.round(width *0.9 );
-    windowHeight = Math.round(height *0.9);
+    windowWidth = Math.round(width * screenSize );
+    windowHeight = Math.round(height * screenSize);
 
     // Open window with app
     mainWindow = new BrowserWindow({
@@ -78,6 +79,10 @@ app.on('ready', async function () {
 
     mainWindow.on('closed', function () {
         mainWindow = null;
+        let windowList = BrowserWindow.getAllWindows();
+        windowList.forEach(window => {
+            window.close();
+        });
     });
 
     mainWindow.on('close', function (e) {
