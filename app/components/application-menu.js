@@ -36,7 +36,7 @@ module.exports = class ApplicationMenu {
     const manageMenu = {
       label: 'Manage',
       click: () => {
-        win.loadURL(buildUrl(win, this.language, "#desktop-database"));
+        win.loadURL(buildUrl(win, this.language, "#database"));
       }
     };
 

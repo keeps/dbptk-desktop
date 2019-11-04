@@ -18,7 +18,7 @@ module.exports = class MemoryManager {
     getMaxHeapMemorySettings() {
         let memorySettings = electronSettings.get('maxHeapMemory');
         if(memorySettings == null || memorySettings > this.getOsMemory()){
-            this.setMaxHeapMemorySettings(setMaxHeapMemorySettings)
+            this.setMaxHeapMemorySettings(memorySettings)
             return this.getMaxHeapMemory();
         }
         return electronSettings.get('maxHeapMemory');
