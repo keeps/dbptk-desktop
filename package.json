@@ -87,8 +87,8 @@
   "scripts": {
     "start": "./node_modules/.bin/electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder -p onTagOrDraft",
-    "dist-lw": "electron-builder -l AppImage -w -p onTagOrDraft",
+    "dist": "electron-builder -p always",
+    "dist-lw": "electron-builder -l AppImage -w -p always",
     "dist-snap": "electron-builder -l snap",
     "preinstall": "./build.sh"
   },
