@@ -5,7 +5,7 @@ const ApplicationMenu = require("./components/application-menu");
 const Dbvtk = require("./components/dbvtk");
 const settings = require('electron-settings');
 
-let title = 'Database Visualization Toolkit';
+let title = 'Database Preservation Toolkit';
 let windowWidth = 1200;
 let windowHeight = 800;
 let mainWindow = null;
@@ -24,7 +24,7 @@ app.on('ready', async function () {
     let loading = new Loading()
     loading.show();
 
-    let server = new Dbvtk();
+    let server = new Dbvtk(loading);
 
     if(!debug){
         try {

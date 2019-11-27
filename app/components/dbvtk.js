@@ -4,6 +4,7 @@ const waitOn = require('wait-on');
 const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
+const Loading = require("./loading");
 const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
 const MemoryManager = require('../helpers/memoryManagerHelper');
 
@@ -12,7 +13,7 @@ module.exports = class Dbvtk {
         this.filename = null;
         this.port = 8080;
         this.appUrl = "http://localhost";
-        this.process = null
+        this.process = null;
     }
 
     getWarFile() {
@@ -39,6 +40,9 @@ module.exports = class Dbvtk {
         let jvmLog = tmp.tmpNameSync();
         setJvmLog(jvmLog);
         console.log("JVM log at " + jvmLog);
+        let loading = new Loading();
+        loading.showJvmLog();
+    
 
         let memoryManager = new MemoryManager()
         let maxHeapMemory = memoryManager.getMaxHeapMemorySettings();
