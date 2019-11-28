@@ -31,7 +31,8 @@
     },
     "linux": {
       "files": [
-        "resources/jre/linux/${arch}/**/*"
+        "resources/jre/linux/${arch}/**/*",
+        "buildResources/*"
       ],
       "target": [
         "AppImage",
@@ -40,7 +41,7 @@
       "asarUnpack": [
         "resources/jre/linux/${arch}"
       ],
-      "icon": "./"
+      "icon": "buildResources/icon.png"
     },
     "snap": {
       "plugs": [

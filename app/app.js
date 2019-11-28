@@ -65,6 +65,9 @@ app.on('ready', async function () {
         }
     });
 
+    if(process.platform === "linux" && !process.env.SNAP){
+        mainWindow.setIcon(app.getAppPath() + '/buildResources/96x96.png')
+    }
     mainWindow.unmaximize()
 
     checkForUpdates(mainWindow)

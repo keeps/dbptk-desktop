@@ -15,6 +15,9 @@ module.exports = class Loading {
             width: 300,
             height: 150
         });
+        if(process.platform === "linux" && !process.env.SNAP){
+            this.window.setIcon(app.getAppPath() + '/buildResources/96x96.png')
+        }
 
         this.refreshIntervalId;
         this.registerEvents();
@@ -31,9 +34,9 @@ module.exports = class Loading {
     }
 
     hide() {
-        // this.window.hide();
-        // this.window.close();
-        // clearInterval(this.refreshIntervalId);
+        this.window.hide();
+        this.window.close();
+        clearInterval(this.refreshIntervalId);
     }
 
     registerEvents() {
