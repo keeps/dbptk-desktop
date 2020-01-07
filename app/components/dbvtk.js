@@ -7,6 +7,7 @@ const tmp = require('tmp');
 const Loading = require("./loading");
 const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
 const MemoryManager = require('../helpers/memoryManagerHelper');
+const electronSettings = require('electron-settings');
 
 module.exports = class Dbvtk {
     constructor() {
@@ -46,6 +47,7 @@ module.exports = class Dbvtk {
 
         let memoryManager = new MemoryManager()
         let maxHeapMemory = memoryManager.getMaxHeapMemorySettings();
+        let tmpDir = electronSettings.get('tmpDir');
 
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [
@@ -54,6 +56,7 @@ module.exports = class Dbvtk {
             "-Dserver.port.file=" + serverPortFile,
             "-Xmx" + maxHeapMemory,
             "-Denv=desktop",
+            "-Djava.io.tmpdir=" + tmpDir
         ];
         if(process.env.SNAP_USER_COMMON){
             console.log("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);

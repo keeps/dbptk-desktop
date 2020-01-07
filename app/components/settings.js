@@ -20,8 +20,8 @@ module.exports = class Settings {
             show: false,
             title: "Settings",
             resizable: false,
-            width: 400,
-            height: 300,
+            width: 450,
+            height: 350,
             parent: BrowserWindow.getFocusedWindow(),
             modal: true,
             frame: false,
@@ -59,6 +59,7 @@ module.exports = class Settings {
         ipcMain.on('APPLY_SETTINGS_EVENT', (event, data) => {
             this.memoryManager.setMaxHeapMemorySettings(data.memory);
             electronSettings.set("language", data.language)
+            electronSettings.set('tmpDir', data.tmpDir)
             app.relaunch();
             app.quit();
         });
@@ -84,6 +85,7 @@ module.exports = class Settings {
             "OsMemory" : this.memoryManager.getOsMemory(),
             "maxMemory" : this.memoryManager.getOsMemory(),
             "minMemory" : this.memoryManager.getMinHeapMemory(),
+            "tmpDir" : electronSettings.get('tmpDir')
         }
         this.window.webContents.send("BUILD_SETTINGS_EVENT", data);
     }
