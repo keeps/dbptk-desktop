@@ -55,9 +55,13 @@ module.exports = class Dbvtk {
             "-Dfile.encoding=UTF-8",
             "-Dserver.port.file=" + serverPortFile,
             "-Xmx" + maxHeapMemory,
-            "-Denv=desktop",
-            "-Djava.io.tmpdir=" + tmpDir
+            "-Denv=desktop"
         ];
+
+        if (tmpDir) {
+            javaVMParameters.push("-Djava.io.tmpdir=" + tmpDir);
+        }
+
         if(process.env.SNAP_USER_COMMON){
             console.log("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
             javaVMParameters.push("-Ddbvtk.home=" + process.env.SNAP_USER_COMMON);
