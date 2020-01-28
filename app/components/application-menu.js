@@ -40,6 +40,13 @@ module.exports = class ApplicationMenu {
       }
     };
 
+    const jobMenu = {
+      label: "Jobs",
+      click: () => {
+        win.loadURL(buildUrl(win, this.language, "#jobs"));
+      }
+    }
+
     const optionsMenu = {
       label: 'Preferences',
       role: 'preferences',
@@ -137,12 +144,14 @@ module.exports = class ApplicationMenu {
           homeMenu,
           createMenu,
           manageMenu,
+          jobMenu,
           optionsMenu,
         ]
       }] : []),
       homeMenu,
       createMenu,
       manageMenu,
+      jobMenu,
       optionsMenu,
       helpMenu
     ]
