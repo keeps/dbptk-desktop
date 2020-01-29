@@ -38,6 +38,7 @@ script:
     fi
 deploy:
   - provider: snap
+    edge: true
     snap: dist/dbvtk*.snap
     channel: stable
     skip_cleanup: true
