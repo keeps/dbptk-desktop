@@ -15,6 +15,11 @@ module.exports = class Dbvtk {
         this.port = 8080;
         this.appUrl = "http://localhost";
         this.process = null;
+        this.loading = null;
+    }
+
+    setLoadingScreen(loading){
+        this.loading = loading;
     }
 
     getWarFile() {
@@ -41,8 +46,7 @@ module.exports = class Dbvtk {
         let jvmLog = tmp.tmpNameSync();
         setJvmLog(jvmLog);
         console.log("JVM log at " + jvmLog);
-        let loading = new Loading();
-        loading.showJvmLog();
+        this.loading.showJvmLog();
     
 
         let memoryManager = new MemoryManager()

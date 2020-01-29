@@ -4,10 +4,7 @@ var fs = require('fs')
 
 module.exports = class Loading {
     constructor() {
-        if(!!Loading.instance){
-            return Loading.instance
-        }
-        Loading.instance = this;
+        console.log("new Loading");
         this.window = new BrowserWindow({
             show: false,
             frame: false,
@@ -23,7 +20,6 @@ module.exports = class Loading {
         this.registerEvents();
 
         this.window.loadURL("file://" + app.getAppPath() + '/app/views/loading.html');
-        return this;
     }
 
     show() {
@@ -35,7 +31,7 @@ module.exports = class Loading {
 
     hide() {
         this.window.hide();
-        this.window.close();
+        //this.window.close();
         clearInterval(this.refreshIntervalId);
     }
 
@@ -55,6 +51,10 @@ module.exports = class Loading {
                 this.window.center();
             }
         });
+    }
+
+    hideLogOptions(){
+        this.window.webContents.send("HIDE_LOG_OPTIONS");
     }
 
     showJvmLog(){

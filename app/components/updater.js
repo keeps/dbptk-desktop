@@ -23,6 +23,7 @@ autoUpdater.on('update-available', () => {
             autoUpdater.downloadUpdate()
             loading = new Loading()
             loading.show();
+            loading.showJvmLog();
         } else {
             if(updater) {
                 updater.enabled = true

@@ -24,7 +24,8 @@ app.on('ready', async function () {
     let loading = new Loading()
     loading.show();
 
-    let server = new Dbvtk(loading);
+    let server = new Dbvtk();
+    server.setLoadingScreen(loading);
 
     if(!debug){
         try {
