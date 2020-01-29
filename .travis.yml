@@ -39,7 +39,7 @@ script:
 deploy:
   - provider: snap
     edge: true
-    snap: dist/dbvtk*.snap
+    snap: dist/dbptk*.snap
     channel: stable
     skip_cleanup: true
     on:
