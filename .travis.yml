@@ -36,9 +36,11 @@ script:
     else
       yarn && yarn dist
     fi
+before_deploy:
+  - sudo apt-get update -qq
+  - sudo apt-get install snapd
 deploy:
   - provider: snap
-    edge: true
     snap: dist/dbptk*.snap
     channel: stable
     skip_cleanup: true
