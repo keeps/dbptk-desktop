@@ -1,4 +1,4 @@
-const { app, Menu, MenuItem, shell } = require('electron');
+const { app, BrowserWindow, Menu, MenuItem, shell } = require('electron');
 const { getJvmLog } = require('../helpers/javaHelper');
 const Settings = require('./settings');
 const electronSettings = require('electron-settings');
@@ -155,7 +155,17 @@ module.exports = class ApplicationMenu {
         {
           label: 'About DBPTK Desktop',
           click: () => {
-            // open a window
+            const win = new BrowserWindow({
+              height: 250,
+              resizable: false,
+              width: 350,
+              title: '',
+              minimizable: false,
+              fullscreenable: false,
+              autoHideMenuBar: true
+            });
+
+            win.loadURL("file://" + app.getAppPath() + '/app/views/about.html');
           }
         }
 
