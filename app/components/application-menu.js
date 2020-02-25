@@ -49,21 +49,40 @@ module.exports = class ApplicationMenu {
           role: 'language',
           submenu: [
             {
+              label: 'Čeština',
+              type: 'radio',
+              checked: (electronSettings.get('language') == 'cs'),
+              click: () => {
+                this.language = "cs"
+                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+              }
+            },
+            {
+              label: 'Deutsch',
+              type: 'radio',
+              checked: (electronSettings.get('language') == 'de'),
+              click: () => {
+                this.language = "de"
+                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+              }
+            },
+            {
+              label: 'English',
+              type: 'radio',
+              checked: (electronSettings.get('language') == null || electronSettings.get('language') == 'en'),
+              click: () => {
+                this.language = "en"
+                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+              }
+            },
+            {
               label: 'Português Europeu',
               type: 'radio',
               checked: (electronSettings.get('language') == 'pt_PT'),
               click: () => {
                 this.language = "pt_PT"
                 win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
-              },
-            }, {
-              label: 'English',
-              type: 'radio', 
-              checked: (electronSettings.get('language') == null || electronSettings.get('language') == 'en'),
-              click: () => {
-                this.language = "en"
-                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
-              },
+              }
             }
           ]
         },
@@ -84,7 +103,7 @@ module.exports = class ApplicationMenu {
         {
           label: 'Learn More',
           click: () => {
-            shell.openExternal('https://visualization.database-preservation.com/')
+            shell.openExternal('https://database-preservation.com/')
           }
         },
         {
@@ -95,7 +114,7 @@ module.exports = class ApplicationMenu {
               label: 'DBPTK logs',
               role: 'dbvtkLog',
               click: () => {
-                if(process.env.SNAP_USER_COMMON){
+                if (process.env.SNAP_USER_COMMON) {
                   shell.openItem(path.join(process.env.SNAP_USER_COMMON, '.dbvtk', 'log'));
                 } else {
                   shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'log'));
@@ -126,6 +145,20 @@ module.exports = class ApplicationMenu {
             }
           }
         },
+        { type: 'separator' },
+        {
+          label: 'What\'s New...',
+          click: () => {
+            shell.openExternal('https://github.com/keeps/db-visualization-toolkit/releases/tag/v' + app.getVersion())
+          }
+        },
+        {
+          label: 'About DBPTK Desktop',
+          click: () => {
+            // open a window
+          }
+        }
+
       ]
     }
 
