@@ -153,6 +153,12 @@ module.exports = class ApplicationMenu {
           }
         },
         {
+          label: "Sponsors",
+          click: () => {
+            win.loadURL(buildUrl(win, this.language, "#sponsors"));
+          }
+        },
+        {
           label: 'About DBPTK Desktop',
           click: () => {
             const win = new BrowserWindow({
