@@ -65,3 +65,6 @@ dist/
 
 # Resources directories
 resources/
+
+package-lock.json
+yarn.lock
