@@ -67,4 +67,3 @@ dist/
 resources/
 
 package-lock.json
-yarn.lock
