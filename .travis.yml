@@ -34,7 +34,7 @@ script:
         electronuserland/builder:wine \
         /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn dist-lw && yarn dist-snap"
     else
-      yarn && yarn dist
+      yarn --pure-lockfile && yarn dist
     fi
 before_deploy:
   - sudo apt-get update -qq
