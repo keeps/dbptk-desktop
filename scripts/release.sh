@@ -3,18 +3,24 @@
 # DEPENDS ON jq:
 # apt intall jq
 
+if ! foobar_loc="$(type -p "jq")" || [[ -z $foobar_loc ]]; then
+  # install foobar here
+  echo "Please install jq dependency before continue."
+  exit 0
+fi
+
 # Version
 RELEASE_VERSION=$1
 NEXT_VERSION=$2
 
-function syntax {
+function syntax() {
   echo "Syntax:  $1 RELEASE_VERSION"
   echo "Example: $1 2.2.0"
 }
 
 if [[ -z "$RELEASE_VERSION" ]]; then
   syntax $0
-  exit 1
+  exit 0
 fi
 
 cat << EOF
