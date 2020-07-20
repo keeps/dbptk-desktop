@@ -49,6 +49,15 @@ module.exports = class ApplicationMenu {
           role: 'language',
           submenu: [
             {
+              label: 'Eesti',
+              type: 'radio',
+              checked: (electronSettings.get('language') == 'et'),
+              click: () => {
+                this.language = "et"
+                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+              }
+            },
+            {
               label: 'Čeština',
               type: 'radio',
               checked: (electronSettings.get('language') == 'cs'),
