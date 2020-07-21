@@ -95,7 +95,7 @@ app.on('ready', async function () {
                 type: 'question'
                 , buttons: ['Yes', 'No']
                 , title: 'Confirm'
-                , message: 'Dou you really want to exit?'
+                , message: 'Do you really want to exit?'
             });
             if (choice == 1) {
                 e.preventDefault();
