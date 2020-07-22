@@ -49,15 +49,6 @@ module.exports = class ApplicationMenu {
           role: 'language',
           submenu: [
             {
-              label: 'Eesti',
-              type: 'radio',
-              checked: (electronSettings.get('language') == 'et'),
-              click: () => {
-                this.language = "et"
-                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
-              }
-            },
-            {
               label: 'Čeština',
               type: 'radio',
               checked: (electronSettings.get('language') == 'cs'),
@@ -81,6 +72,15 @@ module.exports = class ApplicationMenu {
               checked: (electronSettings.get('language') == null || electronSettings.get('language') == 'en'),
               click: () => {
                 this.language = "en"
+                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+              }
+            },
+            {
+              label: 'Eesti',
+              type: 'radio',
+              checked: (electronSettings.get('language') == 'et'),
+              click: () => {
+                this.language = "et"
                 win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
               }
             },
