@@ -1,4 +1,4 @@
-const { checkForUpdates } = require("./components/updater");
+const { checkForUpdates, eventsIsAUpdate } = require("./components/updater");
 const { app, BrowserWindow, globalShortcut, dialog } = require('electron');
 const Loading = require("./components/loading");
 const ApplicationMenu = require("./components/application-menu");
@@ -90,7 +90,7 @@ app.on('ready', async function () {
     });
 
     mainWindow.on('close', function (e) {
-        if (serverProcess) {
+        if (serverProcess && !eventsIsAUpdate()) {
             var choice = require('electron').dialog.showMessageBox(this, {
                 type: 'question'
                 , buttons: ['Yes', 'No']

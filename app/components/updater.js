@@ -1,10 +1,11 @@
-const { dialog } = require('electron');
+const { dialog, app } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const Loading = require("./loading");
 
 let updater
 let focusedWindow
 let loading
+let eventsIsAUpdate = false
 autoUpdater.autoDownload = false
 
 autoUpdater.on('error', (error) => {
@@ -21,9 +22,9 @@ autoUpdater.on('update-available', () => {
     }, (buttonIndex) => {
         if (buttonIndex === 0) {
             autoUpdater.downloadUpdate()
+            focusedWindow.hide()
             loading = new Loading()
             loading.show();
-            loading.showJvmLog();
         } else {
             if(updater) {
                 updater.enabled = true
@@ -47,6 +48,11 @@ autoUpdater.on('update-not-available', () => {
     }
 })
 
+autoUpdater.on('download-progress', (ev, progressObj) => {
+    console.log("download-progress");
+    loading.showTips("download-progress");
+})
+
 autoUpdater.on('update-downloaded', () => {
     loading.hide();
     dialog.showMessageBox(focusedWindow, {
@@ -55,7 +61,10 @@ autoUpdater.on('update-downloaded', () => {
         message: 'Updates downloaded, application will be quit for update...',
         buttons: ['Ok']
     }, () => {
-        setImmediate(() => autoUpdater.quitAndInstall())
+        setImmediate(() => {
+            eventsIsAUpdate = true;
+            autoUpdater.quitAndInstall()
+        })
     })
 })
 
@@ -65,6 +74,13 @@ module.exports.checkForUpdates = function (window) {
     }
     focusedWindow = window
     autoUpdater.checkForUpdates()
+}
+
+module.exports.eventsIsAUpdate = function () {
+    if(process.env.SNAP){
+        return false
+    }
+    return eventsIsAUpdate
 }
 
 module.exports.checkForUpdatesFromMenu = function () {
