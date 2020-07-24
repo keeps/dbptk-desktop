@@ -67,7 +67,6 @@
         {
           "target": "nsis",
           "arch": [
-            "ia32",
             "x64"
           ]
         }
@@ -81,7 +80,7 @@
       {
         "provider": "github",
         "owner": "keeps",
-        "repo": "db-visualization-toolkit-electron"
+        "repo": "dbptk-desktop"
       }
     ]
   },
