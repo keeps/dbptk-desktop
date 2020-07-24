@@ -139,6 +139,17 @@ module.exports = class ApplicationMenu {
             }
           ]
         },
+        {
+          label: 'Reports',
+          role: 'reports',
+          click: () => {
+            if (process.env.SNAP_USER_COMMON) {
+              shell.openItem(path.join(process.env.SNAP_USER_COMMON, '.dbvtk', 'reports'));
+            } else {
+              shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'reports'));
+            }
+          }
+        },
         { type: 'separator' },
         {
           label: 'What\'s New...',
