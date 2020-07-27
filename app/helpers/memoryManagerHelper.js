@@ -4,7 +4,7 @@ const MINIMAL_MEMORY_MB=256
 
 module.exports = class MemoryManager {
     getOsMemory() {
-        return os.totalmem();
+        return os.freemem();
     }
 
     getMaxHeapMemory() {
