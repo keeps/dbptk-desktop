@@ -124,7 +124,7 @@ module.exports = class ApplicationMenu {
               role: 'dbvtkLog',
               click: () => {
                 if (process.env.SNAP_USER_COMMON) {
-                  shell.openItem(path.join(process.env.SNAP_USER_COMMON, '.dbvtk', 'log'));
+                  shell.openItem(path.join(process.env.SNAP_USER_COMMON, 'log'));
                 } else {
                   shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'log'));
                 }
@@ -144,7 +144,7 @@ module.exports = class ApplicationMenu {
           role: 'reports',
           click: () => {
             if (process.env.SNAP_USER_COMMON) {
-              shell.openItem(path.join(process.env.SNAP_USER_COMMON, '.dbvtk', 'reports'));
+              shell.openItem(path.join(process.env.SNAP_USER_COMMON, 'reports'));
             } else {
               shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'reports'));
             }
