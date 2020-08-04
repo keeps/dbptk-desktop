@@ -1,23 +1,23 @@
-# db-visualization-toolkit-electron
+# DBPTK Desktop
 
-A cross-platform app built on [Electron](http://electronjs.org) that uses [Database Visualization Toolkit](https://github.com/keeps/db-visualization-toolkit) as a viewer for relational databases.
+A cross-platform app built on [Electron](http://electronjs.org) that uses [DBPTK UI](https://github.com/keeps/dbptk-ui) as a viewer for relational databases.
 
 ## Installing
 
-You can download the latest release for your operating system [here](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest).
+You can download the latest release for your operating system [here](https://github.com/keeps/dbptk-desktop/releases/latest).
 
 
 #### For Linux
-- Download [AppImage](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest) file
+- Download [AppImage](https://github.com/keeps/dbptk-desktop/releases/latest) file
 - Use chmod u+x on the downloaded file to make it executable.
 
 #### For Mac
-- Download [dmg](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest) file
+- Download [dmg](https://github.com/keeps/dbptk-desktop/releases/latest) file
 - Double-click on the downloaded file to expand the contents.
 - Drag dbvtk-gui to the Applications folder
 
 #### For Windows
-- Download [exe](https://github.com/keeps/db-visualization-toolkit-electron/releases/latest) file
+- Download [exe](https://github.com/keeps/dbptk-desktop/releases/latest) file
 - Once it is downloaded, run the installer (dbvtk-gui.exe).
 
 **This app will automatically update when a new release is available.**
@@ -26,31 +26,31 @@ You can download the latest release for your operating system [here](https://git
 You'll need [Node.js](https://nodejs.org) installed on your computer in order to build this app.
 
 ```bash
-$ git clone https://github.com/keeps/db-visualization-toolkit-electron
-$ cd db-visualization-toolkit-electron
+$ git clone https://github.com/keeps/dbptk-desktop
+$ cd dbptk-desktop
 $ npm install
 $ npm start
 ```
 
 ## More information
 
-Configuration options are detailed in the [Database Visualization Toolkit Wiki](https://github.com/keeps/db-visualization-toolkit/wiki).
+Configuration options are detailed in the [DBPTK UI Wiki](https://github.com/keeps/dbptk-ui/wiki).
 
-Database Visualization Toolkit logos can be downloaded [here](https://github.com/keeps/db-preservation-toolkit/wiki/Logos).
+Database Preservation Toolkit logos can be downloaded [here](https://github.com/keeps/dbptk-developer/wiki/Logos).
 
-More information about these tools can be found at http://database-preservation.com
+More information about these tools can be found at https://database-preservation.com
 
 ## To report a problem or make a suggestion
 
-Create a new issue at https://github.com/keeps/db-visualization-toolkit-electron/issues/new
+Create a new issue at https://github.com/keeps/dbptk-developer/issues/new
 
-Or if the problem/suggestion is related to the Database Preservation Toolkit, create the issue at https://github.com/keeps/db-preservation-toolkit/issues/new
+Or if the problem/suggestion is related to the Database Preservation Toolkit, create the issue at https://github.com/keeps/dbptk-ui/issues/new
 
 ## Information & Commercial support
 
 For more information or commercial support, contact [KEEP SOLUTIONS](http://www.keep.pt/contactos/?lang=en).
 
-## Development [![Build Status](https://travis-ci.org/keeps/db-visualization-toolkit-electron.png?branch=master)](https://travis-ci.org/keeps/db-visualization-toolkit-electron)
+## Development [![Build Status](https://travis-ci.org/keeps/dbptk-desktop.png?branch=master)](https://travis-ci.org/keeps/dbptk-desktop)
 
 ## License
 
