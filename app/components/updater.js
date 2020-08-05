@@ -48,11 +48,6 @@ autoUpdater.on('update-not-available', () => {
     }
 })
 
-autoUpdater.on('download-progress', (ev, progressObj) => {
-    console.log("download-progress");
-    loading.showTips("download-progress");
-})
-
 autoUpdater.on('update-downloaded', () => {
     loading.hide();
     dialog.showMessageBox(focusedWindow, {
