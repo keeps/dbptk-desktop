@@ -4,6 +4,7 @@ const Loading = require("./components/loading");
 const ApplicationMenu = require("./components/application-menu");
 const Dbvtk = require("./components/dbvtk");
 const settings = require('electron-settings');
+const log = require('electron-log');
 
 let title = 'Database Preservation Toolkit';
 let windowWidth = 1200;
@@ -14,7 +15,7 @@ let otherInstanceOpen = !app.requestSingleInstanceLock();
 let debug = process.env.TK_DEBUG;
 
 if (otherInstanceOpen) {
-    console.log("Already open...")
+    log.info("Already open...")
     app.quit();
     return;
 }
@@ -33,7 +34,7 @@ app.on('ready', async function () {
             await server.createProcess();
             serverProcess = server.process;
         } catch (error) {
-            console.log(error);
+            log.error(error);
             dialog.showErrorBox(
                 'Oops! Something went wrong!',
                 error.message
@@ -75,7 +76,7 @@ app.on('ready', async function () {
 
     mainWindow.loadURL(server.appUrl + "/?branding=false&locale=" + language);
     mainWindow.webContents.once('dom-ready', () => {
-        console.log('main loaded')
+        log.info('main loaded');
         mainWindow.show()
         loading.hide();
     })
@@ -105,7 +106,7 @@ app.on('ready', async function () {
 
     // Register a shortcut listener.
     const ret = globalShortcut.register('CommandOrControl+Shift+`', () => {
-        console.log('Bring to front shortcut triggered');
+        log.info('Bring to front shortcut triggered');
         if (mainWindow) {
             mainWindow.focus();
         }
@@ -123,10 +124,10 @@ app.on('will-quit', (event) => {
         // Unregister all shortcuts.
         globalShortcut.unregisterAll();
 
-        console.log('Kill server process ' + serverProcess.pid);
+        log.info('Kill server process ' + serverProcess.pid);
 
         require('tree-kill')(serverProcess.pid, "SIGTERM", function (err) {
-            console.log('Server process killed');
+            log.info('Server process killed');
             serverProcess = null;
             app.quit();
         });

@@ -3,7 +3,7 @@ const { dialog } = require('electron').remote;
 const os = require('os');
 
 let applyBtn = document.getElementById("apply")
-let notification = document.getElementById("notification")
+let notificationChanges = document.getElementById("notificationChanges")
 
 applyBtn.addEventListener("click", function (event) {
     event.preventDefault();
@@ -25,10 +25,16 @@ resetBtn.addEventListener("click", function (event) {
 })
 
 ipcRenderer.on("BUILD_SETTINGS_EVENT", (event, data) => {
+    let fileLocation = document.getElementById("fileLocation")
+    let memory = document.getElementById("memory");
+    let memoryDisplay = document.getElementById("memoryDisplay");
+    
+    fileLocation.innerText = data.fileLocation
+
     let language = document.getElementById("language");
     language.addEventListener('change', function () {
         applyBtn.disabled = false;
-        notification.style.display = "block"
+        notificationChanges.style.display = "block"
     })
 
     for (let i = 0; i < language.options.length; i++) {
@@ -45,7 +51,7 @@ ipcRenderer.on("BUILD_SETTINGS_EVENT", (event, data) => {
           let tmpDir = document.getElementById("tmpDir");
           if (path) {
             applyBtn.disabled = false;
-            notification.style.display = "block"
+            notificationChanges.style.display = "block"
             tmpDir.value = path;
           }
     })
@@ -57,31 +63,25 @@ ipcRenderer.on("BUILD_SETTINGS_EVENT", (event, data) => {
         tmpDir.value = os.tmpdir();
     }
 
-    let memory = document.getElementById("memory");
-    let memoryDisplay = document.getElementById("memoryDisplay");
-
     memory.max = data.OsMemory
     memory.min = data.minMemory
-    memory.value = data.maxHeapMemorySettings
+    if (data.maxHeapMemorySettings) {
+        memory.value = data.maxHeapMemorySettings
+    } else {
+        memory.value = data.minMemory
+    }
     memoryDisplay.value = ipcRenderer.sendSync("GET_HUMANIZED_MEMORY_VALUE", memory.value);
+
+
     memory.addEventListener("input", function () {
-        if (memory.value >= data.maxMemory) {
-            memory.value = data.maxMemory;
-        }
         applyBtn.disabled = false;
-        notification.style.display = "block"
+        notificationChanges.style.display = "block"
         memoryDisplay.value = ipcRenderer.sendSync("GET_HUMANIZED_MEMORY_VALUE", memory.value);
     })
 
     memoryDisplay.addEventListener("change", function () {
-        let memoryValueInBytes = ipcRenderer.sendSync("GET_MEMORY_VALUE_IN_BYTES", memoryDisplay.value);
-        if (memoryValueInBytes >= data.maxMemory) {
-            memoryValueInBytes = data.maxMemory
-        } else if (memoryValueInBytes <= data.minMemory) {
-            memoryValueInBytes = data.minMemory
-        }
         applyBtn.disabled = false;
-        notification.style.display = "block"
+        notificationChanges.style.display = "block"
         memoryDisplay.value = ipcRenderer.sendSync("GET_HUMANIZED_MEMORY_VALUE", memoryValueInBytes);
         memory.value = memoryValueInBytes
     })

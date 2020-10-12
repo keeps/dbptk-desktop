@@ -1,5 +1,6 @@
 const { spawnSync } = require('child_process');
 const { app } = require('electron');
+const log = require('electron-log');
 
 let java = {path:'java', version:null, os:"linux", exec: 'bin/java', jvmLog: null}
 
@@ -19,8 +20,8 @@ module.exports.getjavaVersionAndPath = function () {
 
     java.version = getJavaVersion(java.path);
 
-    console.log("Java version is: " + java.version);
-    console.log("Java Path is: " + java.path);
+    log.info("Java version is: " + java.version);
+    log.info("Java Path is: " + java.path);
 
     return java;
 }

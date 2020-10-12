@@ -1,4 +1,5 @@
 const { BrowserWindow, app, ipcMain } = require('electron');
+const log = require('electron-log');
 const electronSettings = require('electron-settings');
 const MemoryManager = require('../helpers/memoryManagerHelper');
 
@@ -10,6 +11,7 @@ module.exports = class Settings {
         Settings.instance = this;
         this.window = null;
         this.memoryManager = new MemoryManager();
+        this.log = log
         this.registerEvents();
 
         return this;
@@ -21,14 +23,13 @@ module.exports = class Settings {
             title: "Settings",
             resizable: false,
             width: 450,
-            height: 350,
+            height: 450,
             parent: BrowserWindow.getFocusedWindow(),
             modal: true,
             frame: false,
             webPreferences: {
                 nodeIntegration: true
             }
-
         })
 
         window.on('closed',function(){
@@ -57,6 +58,8 @@ module.exports = class Settings {
 
     registerEvents() {
         ipcMain.on('APPLY_SETTINGS_EVENT', (event, data) => {
+            this.log.info("Applying new settings")
+            this.log.info("Memory = " + data.memory)
             this.memoryManager.setMaxHeapMemorySettings(data.memory);
             electronSettings.set("language", data.language)
             electronSettings.set('tmpDir', data.tmpDir)
@@ -82,10 +85,11 @@ module.exports = class Settings {
         const data = {
             "language" : electronSettings.get('language'),
             "maxHeapMemorySettings" : this.memoryManager.getMaxHeapMemorySettings(),
-            "OsMemory" : this.memoryManager.getOsMemory(),
-            "maxMemory" : this.memoryManager.getOsMemory(),
+            "OsMemory" : this.memoryManager.getOsMemoryTotal(),
+            "freeMemory" : this.memoryManager.getFreeMemory(),
             "minMemory" : this.memoryManager.getMinHeapMemory(),
-            "tmpDir" : electronSettings.get('tmpDir')
+            "tmpDir" : electronSettings.get('tmpDir'),
+            "fileLocation" : electronSettings.file()
         }
         this.window.webContents.send("BUILD_SETTINGS_EVENT", data);
     }

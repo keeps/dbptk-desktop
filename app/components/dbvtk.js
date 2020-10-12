@@ -8,6 +8,7 @@ const Loading = require("./loading");
 const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
 const MemoryManager = require('../helpers/memoryManagerHelper');
 const electronSettings = require('electron-settings');
+const log = require('electron-log');
 
 module.exports = class Dbvtk {
     constructor() {
@@ -41,11 +42,11 @@ module.exports = class Dbvtk {
         let java = getjavaVersionAndPath();
 
         let serverPortFile = tmp.tmpNameSync();
-        console.log("Port file at " + serverPortFile);
+        log.info("Port file at " + serverPortFile);
 
         let jvmLog = tmp.tmpNameSync();
         setJvmLog(jvmLog);
-        console.log("JVM log at " + jvmLog);
+        log.info("JVM log at " + jvmLog);
         this.loading.showJvmLog();
     
 
@@ -58,16 +59,19 @@ module.exports = class Dbvtk {
             "-Dserver.port=0",
             "-Dfile.encoding=UTF-8",
             "-Dserver.port.file=" + serverPortFile,
-            "-Xmx" + maxHeapMemory,
             "-Denv=desktop"
         ];
+
+        if ( maxHeapMemory != null ) {
+            javaVMParameters.push("-Xmx" + maxHeapMemory)
+        }
 
         if (tmpDir) {
             javaVMParameters.push("-Djava.io.tmpdir=" + tmpDir);
         }
 
         if(process.env.SNAP_USER_COMMON){
-            console.log("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
+            log.info("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
             javaVMParameters.push("-Ddbvtk.home=" + process.env.SNAP_USER_COMMON);
         }
 
@@ -82,10 +86,10 @@ module.exports = class Dbvtk {
         this.process.on('error', (code, signal) => {
             throw new Error('DBVTK could not be started');
         });
-        console.log('Server PID: ' + this.process.pid);
+        log.info('Server PID: ' + this.process.pid);
 
         // Waiting for app to start
-        console.log('Wait until ' + serverPortFile + ' exists...');
+        log.info('Wait until ' + serverPortFile + ' exists...');
         await waitOn({ resources: [serverPortFile] });
 
         this.port = parseInt(fs.readFileSync(serverPortFile));
@@ -93,8 +97,8 @@ module.exports = class Dbvtk {
 
         this.appUrl = `${this.appUrl}:${this.port}`;
 
-        console.log("Server at " + this.appUrl);
+        log.info("Server at " + this.appUrl);
         await waitOn({ resources: [this.appUrl] });
-        console.log('Server started!');
+        log.info('Server started!');
     }
 }

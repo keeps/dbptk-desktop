@@ -1,14 +1,15 @@
 const os = require("os");
+const log = require('electron-log');
 const electronSettings = require('electron-settings');
 const MINIMAL_MEMORY_MB=256
 
 module.exports = class MemoryManager {
-    getOsMemory() {
+    getFreeMemory() {
         return os.freemem();
     }
 
-    getMaxHeapMemory() {
-        return Math.floor(this.getOsMemory() * 3 / (4 * Math.pow(2, 10))) * Math.pow(2, 10);
+    getOsMemoryTotal() {
+        return os.totalmem();
     }
 
     getMinHeapMemory() {
@@ -17,18 +18,29 @@ module.exports = class MemoryManager {
 
     getMaxHeapMemorySettings() {
         let memorySettings = electronSettings.get('maxHeapMemory');
-        if(memorySettings == null || memorySettings > this.getOsMemory()){
-            this.setMaxHeapMemorySettings(memorySettings)
-            return this.getMaxHeapMemory();
+        if( memorySettings <= this.getOsMemoryTotal() && memorySettings >= this.getMinHeapMemory() ) {
+            log.info("Configured memory: " + this.getHumanizedMemoryValue(memorySettings) + "GB")
+            return electronSettings.get('maxHeapMemory');
+        } 
+        if( memorySettings == null ){
+            log.info("Memory is not set")
+        } else if( memorySettings > this.getOsMemoryTotal() ){
+            log.warn("Configured memory ("+ this.getHumanizedMemoryValue(memorySettings)+") is larger than the total of memory on the system")
+        } else {
+            log.warn("Configured memory ("+ this.getHumanizedMemoryValue(memorySettings)+") is less than the minimum required")
         }
-        return electronSettings.get('maxHeapMemory');
+        log.info("Delegating responsibility to the JVM")
+        electronSettings.delete('maxHeapMemory')
+        return null;
     }
 
     setMaxHeapMemorySettings(maxHeapMemory) {
-        if (maxHeapMemory != null && maxHeapMemory <= this.getOsMemory()){
-            electronSettings.set('maxHeapMemory', maxHeapMemory);    
+        if( maxHeapMemory <= this.getOsMemoryTotal() && maxHeapMemory >= this.getMinHeapMemory() ) {
+            log.info("setting heap memory to: " + this.getHumanizedMemoryValue(maxHeapMemory) + "GB")
+            electronSettings.set('maxHeapMemory', maxHeapMemory);
         } else {
-            electronSettings.set('maxHeapMemory', this.getMaxHeapMemory());
+            log.warn("Delegating responsibility to the JVM")
+            electronSettings.delete('maxHeapMemory')
         }
     }
 

@@ -1,10 +1,10 @@
 const { BrowserWindow, app, ipcMain } = require('electron');
+const log = require('electron-log');
 const { getJvmLog } = require('../helpers/javaHelper');
 var fs = require('fs')
 
 module.exports = class Loading {
     constructor() {
-        console.log("new Loading");
         this.window = new BrowserWindow({
             show: false,
             frame: false,
@@ -24,7 +24,7 @@ module.exports = class Loading {
 
     show() {
         this.window.webContents.once('dom-ready', () => {
-            console.log("Loading");
+            log.info("Loading");
             this.window.show();
         })
     }
