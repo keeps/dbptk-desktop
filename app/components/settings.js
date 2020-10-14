@@ -6,6 +6,7 @@ const MemoryManager = require('../helpers/memoryManagerHelper');
 module.exports = class Settings {
     constructor() {
         if(!!Settings.instance) {
+            log.debug("Setting already exist")
             return Settings.instance
         }
         Settings.instance = this;

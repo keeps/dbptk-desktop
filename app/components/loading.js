@@ -63,9 +63,15 @@ module.exports = class Loading {
         this.refreshIntervalId = setInterval(function(){
             if(jvmFile){
                 fs.readFile(jvmFile, 'utf8', function(err, contents) {
-                    loadingWin.webContents.send("UPDATED_LOG_LIST", contents);
+                    if(loadingWin){
+                        loadingWin.webContents.send("UPDATED_LOG_LIST", contents);
+                    }
                 });
             }
         }, 1000)
+    }
+
+    clear(){
+        clearInterval(this.refreshIntervalId);
     }
 }

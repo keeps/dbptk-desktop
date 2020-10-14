@@ -79,11 +79,14 @@ module.exports = class Dbvtk {
             cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/'
         });
 
-        this.process.stdout.pipe(fs.createWriteStream(jvmLog, {
-            flags: 'a'
-        })); // logging
+        const file = fs.createWriteStream(jvmLog, { flags: 'a' })
+        file.on('error', function(err) {
+            throw new Error('DBVTK could not be started');
+        });
+        this.process.stdout.pipe(file); // logging
 
         this.process.on('error', (code, signal) => {
+            log.error('log file');    
             throw new Error('DBVTK could not be started');
         });
         log.info('Server PID: ' + this.process.pid);

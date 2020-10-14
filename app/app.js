@@ -1,7 +1,8 @@
 const { checkForUpdates, eventsIsAUpdate } = require("./components/updater");
-const { app, BrowserWindow, globalShortcut, dialog } = require('electron');
+const { app, BrowserWindow, globalShortcut, dialog, ipcMain } = require('electron');
 const Loading = require("./components/loading");
 const ApplicationMenu = require("./components/application-menu");
+const Settings = require('./components/settings');
 const Dbvtk = require("./components/dbvtk");
 const settings = require('electron-settings');
 const log = require('electron-log');
@@ -13,6 +14,8 @@ let mainWindow = null;
 let serverProcess = null;
 let otherInstanceOpen = !app.requestSingleInstanceLock();
 let debug = process.env.TK_DEBUG;
+let server = null
+let loading = null
 
 if (otherInstanceOpen) {
     log.info("Already open...")
@@ -22,10 +25,10 @@ if (otherInstanceOpen) {
 
 app.on('ready', async function () {
 
-    let loading = new Loading()
+    loading = new Loading()
     loading.show();
 
-    let server = new Dbvtk();
+    server = new Dbvtk();
     server.setLoadingScreen(loading);
 
     if(!debug){
@@ -39,7 +42,7 @@ app.on('ready', async function () {
                 'Oops! Something went wrong!',
                 error.message
             )
-            app.exit()
+            closeApp()
         }
     } else {
         server.appUrl = server.appUrl + ":" + server.port;
@@ -79,6 +82,7 @@ app.on('ready', async function () {
         log.info('main loaded');
         mainWindow.show()
         loading.hide();
+        Settings.instance = null;
     })
     new ApplicationMenu().createMenu(mainWindow.webContents, debug);
 
@@ -113,25 +117,14 @@ app.on('ready', async function () {
     })
 });
 
-app.on('window-all-closed', function () {
-    app.quit();
+app.on('window-all-closed', (event) => {
+    event.preventDefault();
+    closeApp();
 });
 
 app.on('will-quit', (event) => {
-    if (serverProcess != null) {
-        event.preventDefault();
-
-        // Unregister all shortcuts.
-        globalShortcut.unregisterAll();
-
-        log.info('Kill server process ' + serverProcess.pid);
-
-        require('tree-kill')(serverProcess.pid, "SIGTERM", function (err) {
-            log.info('Server process killed');
-            serverProcess = null;
-            app.quit();
-        });
-    }
+    event.preventDefault();
+    closeApp();
 });
 
 app.on('second-instance', function (event, commandLine, workingDirectory) {
@@ -142,3 +135,31 @@ app.on('second-instance', function (event, commandLine, workingDirectory) {
     }
     return true;
 });
+
+ipcMain.on('CLOSE_APP', (event, arg) => {
+    event.preventDefault();
+    closeApp();
+})
+
+ipcMain.on('OPEN_SETTINGS', (event, arg) => {
+    new Settings().show()
+})
+
+function closeApp(){
+    loading.clear()
+    if (serverProcess != null) {
+        // Unregister all shortcuts.
+        globalShortcut.unregisterAll();
+
+        log.info('Kill server process ' + serverProcess.pid);
+
+        require('tree-kill')(serverProcess.pid, "SIGTERM", function (err) {
+            log.info('Server process killed');
+            serverProcess = null;
+            app.exit();
+        });
+    } else {
+        loading.clear()
+        app.exit();
+    }
+}
