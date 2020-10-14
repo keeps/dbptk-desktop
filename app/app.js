@@ -11,7 +11,6 @@ let title = 'Database Preservation Toolkit';
 let windowWidth = 1200;
 let windowHeight = 800;
 let mainWindow = null;
-let serverProcess = null;
 let otherInstanceOpen = !app.requestSingleInstanceLock();
 let debug = process.env.TK_DEBUG;
 let server = null
@@ -34,8 +33,7 @@ app.on('ready', async function () {
     if(!debug){
         try {
             server.getWarFile();
-            await server.createProcess();
-            serverProcess = server.process;
+            await server.createProcess()
         } catch (error) {
             log.error(error);
             dialog.showErrorBox(
@@ -47,7 +45,38 @@ app.on('ready', async function () {
     } else {
         server.appUrl = server.appUrl + ":" + server.port;
     }
+    initApp()
+});
 
+app.on('window-all-closed', (event) => {
+    event.preventDefault();
+    closeApp();
+});
+
+app.on('will-quit', (event) => {
+    event.preventDefault();
+    closeApp();
+});
+
+app.on('second-instance', function (event, commandLine, workingDirectory) {
+    if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.show();
+        mainWindow.focus();
+    }
+    return true;
+});
+
+ipcMain.on('CLOSE_APP', (event, arg) => {
+    event.preventDefault();
+    closeApp();
+})
+
+ipcMain.on('OPEN_SETTINGS', (event, arg) => {
+    new Settings().show()
+})
+
+function initApp(){
     const language = settings.get('language')!= null ? settings.get('language') : "en";
     // Use 90% of screen size
     const screenSize = 0.9;
@@ -95,7 +124,7 @@ app.on('ready', async function () {
     });
 
     mainWindow.on('close', function (e) {
-        if (serverProcess && !eventsIsAUpdate()) {
+        if (server.process && !eventsIsAUpdate()) {
             var choice = require('electron').dialog.showMessageBox(this, {
                 type: 'question'
                 , buttons: ['Yes', 'No']
@@ -115,51 +144,25 @@ app.on('ready', async function () {
             mainWindow.focus();
         }
     })
-});
-
-app.on('window-all-closed', (event) => {
-    event.preventDefault();
-    closeApp();
-});
-
-app.on('will-quit', (event) => {
-    event.preventDefault();
-    closeApp();
-});
-
-app.on('second-instance', function (event, commandLine, workingDirectory) {
-    if (mainWindow) {
-        if (mainWindow.isMinimized()) mainWindow.restore();
-        mainWindow.show();
-        mainWindow.focus();
-    }
-    return true;
-});
-
-ipcMain.on('CLOSE_APP', (event, arg) => {
-    event.preventDefault();
-    closeApp();
-})
-
-ipcMain.on('OPEN_SETTINGS', (event, arg) => {
-    new Settings().show()
-})
+}
 
 function closeApp(){
     loading.clear()
-    if (serverProcess != null) {
+    if (server.process != null) {
         // Unregister all shortcuts.
         globalShortcut.unregisterAll();
-
-        log.info('Kill server process ' + serverProcess.pid);
-
-        require('tree-kill')(serverProcess.pid, "SIGTERM", function (err) {
-            log.info('Server process killed');
-            serverProcess = null;
-            app.exit();
-        });
+        killProcess()
     } else {
-        loading.clear()
         app.exit();
     }
+}
+
+function killProcess() {
+    log.info('Kill server process ' + server.process.pid);
+
+    require('tree-kill')(server.process.pid, "SIGTERM", function (err) {
+        log.info('Server process killed');
+        server.process = null;
+        app.exit();
+    });
 }
