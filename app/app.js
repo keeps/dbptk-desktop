@@ -111,7 +111,10 @@ function initApp(){
         log.info('main loaded');
         mainWindow.show()
         loading.hide();
-        Settings.instance = null;
+        if(Settings.instance){
+            Settings.instance = null;
+            new Settings().show()
+        }
     })
     new ApplicationMenu().createMenu(mainWindow.webContents, debug);
 
