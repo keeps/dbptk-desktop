@@ -59,6 +59,8 @@ module.exports = class Dbvtk {
             "-Dserver.port=0",
             "-Dfile.encoding=UTF-8",
             "-Dserver.port.file=" + serverPortFile,
+            "-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl",
+            "-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl",
             "-Denv=desktop"
         ];
 
