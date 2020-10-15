@@ -2,6 +2,7 @@ const { app, BrowserWindow, Menu, MenuItem, shell } = require('electron');
 const { getJvmLog } = require('../helpers/javaHelper');
 const Settings = require('./settings');
 const electronSettings = require('electron-settings');
+const log = require('electron-log');
 const path = require('path');
 
 function buildUrl(win, language, path) {
@@ -135,6 +136,13 @@ module.exports = class ApplicationMenu {
               role: 'jvmLog',
               click: () => {
                 shell.openItem(getJvmLog());
+              }
+            },
+            {
+              label: 'application',
+              role: 'applicationLog',
+              click: () => {
+                shell.openItem(log.transports.file.getFile().path);
               }
             }
           ]

@@ -1,6 +1,5 @@
 const { BrowserWindow, app, ipcMain } = require('electron');
 const log = require('electron-log');
-const { getJvmLog } = require('../helpers/javaHelper');
 var fs = require('fs')
 
 module.exports = class Loading {
@@ -57,12 +56,11 @@ module.exports = class Loading {
         this.window.webContents.send("HIDE_LOG_OPTIONS");
     }
 
-    showJvmLog(){
-        let jvmFile = getJvmLog();
+    showLog(file){
         let loadingWin = this.window;
         this.refreshIntervalId = setInterval(function(){
-            if(jvmFile){
-                fs.readFile(jvmFile, 'utf8', function(err, contents) {
+            if(file){
+                fs.readFile(file, 'utf8', function(err, contents) {
                     if(loadingWin){
                         loadingWin.webContents.send("UPDATED_LOG_LIST", contents);
                     }

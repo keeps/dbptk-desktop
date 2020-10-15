@@ -47,7 +47,7 @@ module.exports = class Dbvtk {
         let jvmLog = tmp.tmpNameSync();
         setJvmLog(jvmLog);
         log.info("JVM log at " + jvmLog);
-        this.loading.showJvmLog();
+        this.loading.showLog(jvmLog);
     
 
         let memoryManager = new MemoryManager()

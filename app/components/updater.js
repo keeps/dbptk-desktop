@@ -1,5 +1,6 @@
 const { dialog, app } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const log = require('electron-log');
 const Loading = require("./loading");
 
 let updater
@@ -7,6 +8,7 @@ let focusedWindow
 let loading
 let eventsIsAUpdate = false
 autoUpdater.autoDownload = false
+autoUpdater.logger = log;
 
 autoUpdater.on('error', (error) => {
     //dialog.showErrorBox('Error; ', error == null ? "unknown" : (error.stack || error).toString());
@@ -25,6 +27,7 @@ autoUpdater.on('update-available', () => {
             focusedWindow.hide()
             loading = new Loading()
             loading.show();
+            loading.showLog(log.transports.file.getFile().path);
         } else {
             if(updater) {
                 updater.enabled = true
@@ -61,6 +64,13 @@ autoUpdater.on('update-downloaded', () => {
             autoUpdater.quitAndInstall()
         })
     })
+})
+
+autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    log.info(log_message)
 })
 
 module.exports.checkForUpdates = function (window) {
