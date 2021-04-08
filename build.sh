@@ -1,41 +1,25 @@
 #!/bin/bash
 
-#Check if build is for Master or Release
-if [ "`echo $TRAVIS_BRANCH | egrep "^v[1-9]+" | wc -l`" -eq "1" ] || [ "$TRAVIS_BRANCH" == "master" ]; then
-    #Get DBVTK version from package.json (dbvtkVersion)
-    if [ -z "$DBVTK_VERSION" ]; then
-        DBVTK_VERSION=$(cat package.json \
-        | grep dbvtkVersion \
-        | head -1 \
-        | awk -F: '{ print $2 }' \
-        | sed 's/[",]//g' \
-        | tr -d '[[:space:]]')
-    fi
+#DBPTK_UI_VERSION=2.6.5
+#FLOW=main | staging
 
-    echo "Logic for tags"
-    DBVTK="dbvtk-${DBVTK_VERSION}.war"
-    DEPLOY="master"
-else
-    #For Dev Branch
-    echo "Logic for staging"
-    DBVTK="dbvtk-staging.war"
-    #DEPLOY="staging"
-    DEPLOY="master"
-fi
+# Check if FLOW is main or stating
+# if is main download the .war from GitHub packages
+# if is staging only downloads the JRE files
+if [ "$FLOW" == "main" ]; then
 
-echo $DBVTK
-BINTRAY="https://dl.bintray.com/keeps/db-visualization-toolkit/${DBVTK}"
-DBVTK_TARGET="./resources/war/dbvtk.war"
+    GITHUB_PACKAGES_DL_LINK="https://maven.pkg.github.com/keeps/dbptk-ui/com/databasepreservation/visualization/dbvtk/${DBPTK_UI_VERSION}/dbvtk-${DBPTK_UI_VERSION}.war "
+    DBPTK_UI_WAR_TARGET="./resources/war/dbvtk.war"
 
-#Download dbvtk package from bintray
-if [ ! -f $DBVTK_TARGET ]; then
-    echo "Downloading ${DBVTK} from bintray"
-    mkdir -p "./resources/war"
-    response=$(curl --write-out %{http_code} -L $BINTRAY -o $DBVTK_TARGET)
+    if [ ! -f $DBPTK_UI_WAR_TARGET ]; then
+        echo "Downloading version ${DBPTK_UI_VERSION} from GitHub packages"
+        mkdir -p "./resources/war"
+        response=$(curl --write-out %{http_code} -H "Authorization: token ${GITHUB_TOKEN}" -L $GITHUB_PACKAGES_DL_LINK -o $DBPTK_UI_WAR_TARGET)
     
-    if [ "${response}" != "200" ]; then
-        echo "Error! version does not exist in Bintray"
-        exit 1;
+        if [ "${response}" != "200" ]; then
+            echo "Error! version does not exist in Bintray"
+            exit 1;
+        fi
     fi
 fi
 

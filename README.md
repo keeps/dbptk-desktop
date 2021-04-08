@@ -11,6 +11,8 @@ You can download the latest release for your operating system [here](https://git
 - Download [AppImage](https://github.com/keeps/dbptk-desktop/releases/latest) file
 - Use chmod u+x on the downloaded file to make it executable.
 
+[![dbptk-desktop](https://snapcraft.io/dbptk-desktop/badge.svg)](https://snapcraft.io/dbptk-desktop)
+
 #### For Mac
 - Download [dmg](https://github.com/keeps/dbptk-desktop/releases/latest) file
 - Double-click on the downloaded file to expand the contents.
