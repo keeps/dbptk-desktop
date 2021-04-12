@@ -3,8 +3,6 @@ name: Staging
 on: 
   repository_dispatch: 
     types: ["dispatch-staging"]
-  workflow_dispatch:
-    
 
 jobs:
   deploy:
