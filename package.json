@@ -89,7 +89,7 @@
     "start": "./node_modules/.bin/electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder -p onTag",
-    "dist-lw": "electron-builder -l AppImage -w -p onTag",
+    "dist-lw": "electron-builder -l AppImage -w -p always",
     "preinstall": "./build.sh"
   },
   "license": "LGPL-3.0-or-later",
