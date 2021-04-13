@@ -11,6 +11,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Set GitHub config
+        run: |
+          git config --local user.email "mguimaraes@keep.pt"
+          git config --local user.name "Miguel Guimarães"
       
       - name: Run release script
         run: ./scripts/release.sh $TAG
