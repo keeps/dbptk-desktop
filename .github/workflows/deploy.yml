@@ -50,7 +50,7 @@ jobs:
             electronuserland/builder:wine \
             /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn dist"
         env:
-          DBPTK_UI_VERSION: ${{ steps.tag.outputs.result }}
+          DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FLOW: ${{ github.event.client_payload.flow }}
   
@@ -71,7 +71,7 @@ jobs:
         with:
           path: dist/*
           key: ${{ runner.os }}-${{ github.event.client_payload.version }}
-          
+
       - name: Release to GitHub
         uses: softprops/action-gh-release@v1
         with:
