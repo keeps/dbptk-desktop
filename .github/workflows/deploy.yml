@@ -53,16 +53,6 @@ jobs:
           DBPTK_UI_VERSION: ${{ steps.tag.outputs.result }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FLOW: ${{ github.event.client_payload.flow }}
-      
-      - name: Install Snapcraft
-        if: startsWith(matrix.os, 'ubuntu')
-        uses: samuelmeuli/action-snapcraft@v1
-        with:
-          snapcraft_token: ${{ secrets.SNAP_TOKEN }}
-
-      - name: Upload to snapcraft
-        if: startsWith(matrix.os, 'ubuntu')
-        run: snapcraft upload --release=stable dist/dbptk-desktop*.snap
   
   deploy:
     needs: [build]
@@ -81,7 +71,8 @@ jobs:
         with:
           path: dist/*
           key: ${{ runner.os }}-${{ github.event.client_payload.version }}
-      - name: Release
+          
+      - name: Release to GitHub
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -93,6 +84,16 @@ jobs:
           tag_name: ${{ github.event.client_payload.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Snapcraft
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: samuelmeuli/action-snapcraft@v1
+        with:
+          snapcraft_token: ${{ secrets.SNAP_TOKEN }}
+
+      - name: Upload to snapcraft
+        if: startsWith(matrix.os, 'ubuntu')
+        run: snapcraft upload --release=stable dist/dbptk-desktop*.snap
 
   tag:
     needs: [build, deploy]
