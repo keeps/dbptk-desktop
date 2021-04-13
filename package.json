@@ -94,7 +94,7 @@
   },
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
-    "electron": "4.2.5",
+    "electron": "9.4.0",
     "electron-builder": "^21.2.0",
     "electron-packager": "^13.1.1"
   },
