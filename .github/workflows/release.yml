@@ -1,0 +1,18 @@
+name: Release
+
+on: 
+  repository_dispatch: 
+    types: ["dispatch-main"]
+      
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Run release script
+        run: ./scripts/release.sh $TAG
+        env:
+          TAG: ${{ github.event.client_payload.version }}

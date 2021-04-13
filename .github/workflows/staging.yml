@@ -45,7 +45,6 @@ jobs:
         uses: samuelmeuli/action-snapcraft@v1
         with:
           snapcraft_token: ${{ secrets.SNAP_TOKEN_EDGE }}
-          channel: edge
 
       - name: Upload to snapcraft
         if: startsWith(matrix.os, 'ubuntu')
