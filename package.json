@@ -89,6 +89,7 @@
     "start": "./node_modules/.bin/electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
+    "dist-lw": "electron-builder -lw",
     "preinstall": "./build.sh"
   },
   "license": "LGPL-3.0-or-later",

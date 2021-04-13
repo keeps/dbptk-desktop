@@ -29,8 +29,6 @@ cat << EOF
 ################################
 EOF
 
-RELEASE_TAG="v$RELEASE_VERSION"
-
 # Updating the package.json version
 cat package.json | jq ".version = \"$RELEASE_VERSION\"" | jq ".dbvtkVersion = \"$RELEASE_VERSION\"" > tmp
 mv tmp package.json
@@ -38,9 +36,3 @@ mv tmp package.json
 # Commit version update
 git add -u
 git commit -m "Setting version $RELEASE_VERSION"
-
-# Create tag
-git tag -a "$RELEASE_TAG" -m "Version $RELEASE_VERSION"
-
-# Push tag
-git push origin "$RELEASE_TAG"

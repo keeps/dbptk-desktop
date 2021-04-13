@@ -48,12 +48,28 @@ jobs:
             -v ~/.cache/electron:/root/.cache/electron \
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine \
-            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn dist"
+            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn dist-lw"
         env:
           DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FLOW: ${{ github.event.client_payload.flow }}
-  
+
+      - name: Set GitHub config
+        run: |
+          git config --local user.email "mguimaraes@keep.pt"
+          git config --local user.name "Miguel Guimarães"
+      
+      - name: Run release script
+        run: ./scripts/release.sh $TAG
+        env:
+          TAG: ${{ github.event.client_payload.version }}
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+
   deploy:
     needs: [build]
     strategy:
@@ -65,6 +81,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          branch: master
 
       - name: Cache dist
         uses: actions/cache@v2
@@ -81,7 +99,7 @@ jobs:
             dist/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
             dist/latest*
           name: Version ${{ github.event.client_payload.version }}
-          tag_name: ${{ github.event.client_payload.version }}
+          tag_name: v${{ github.event.client_payload.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -94,27 +112,3 @@ jobs:
       - name: Upload to snapcraft
         if: startsWith(matrix.os, 'ubuntu')
         run: snapcraft upload --release=stable dist/dbptk-desktop*.snap
-
-  tag:
-    needs: [build, deploy]
-
-    runs-on: ubuntu-latest  
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Set GitHub config
-        run: |
-          git config --local user.email "mguimaraes@keep.pt"
-          git config --local user.name "Miguel Guimarães"
-      
-      - name: Run release script
-        run: ./scripts/release.sh $TAG
-        env:
-          TAG: ${{ github.event.client_payload.version }}
-      
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
