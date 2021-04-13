@@ -3,24 +3,6 @@ name: Release
 on: 
   repository_dispatch: 
     types: ["dispatch-main"]
-  
-  workflow_dispatch:
-    inputs:
-        version:
-          description: "Version"
-          required: true
-        type:
-          description: "Flow"
-          required: false
-
-# Change the version on package.json
-# Build the dist for Win, macOs and Linux (AppImage and snap)
-# Cache the artifacts
-
-# job2
-# load cache
-# Create a github release with artifacts
-# run release.sh script
       
 jobs:
   build:
@@ -39,21 +21,21 @@ jobs:
           cat package.json | jq ".version = \"$RELEASE_VERSION\"" | jq ".dbvtkVersion = \"$RELEASE_VERSION\"" > tmp
           mv tmp package.json
         env:
-          RELEASE_VERSION: ${{ github.event.inputs.version }}
+          RELEASE_VERSION: ${{ github.event.client_payload.version }}
       
       - name: Cache dist
         uses: actions/cache@v2
         with:
           path: dist/*
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: ${{ runner.os }}-${{ github.event.client_payload.version }}
 
       - name: Package MacOS
         if: startsWith(matrix.os, 'macos')
         run: yarn --pure-lockfile && yarn dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DBPTK_UI_VERSION: ${{ github.event.inputs.version }}
-          FLOW: ${{ github.event.inputs.flow }}
+          DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
+          FLOW: ${{ github.event.client_payload.flow }}
 
       - name: Package Linux & Windows
         if: startsWith(matrix.os, 'ubuntu')
@@ -66,31 +48,29 @@ jobs:
             -v ~/.cache/electron:/root/.cache/electron \
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
             electronuserland/builder:wine \
-            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn dist-lw"
+            /bin/bash -c "yarn --link-duplicates --pure-lockfile && yarn dist"
         env:
           DBPTK_UI_VERSION: ${{ steps.tag.outputs.result }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          FLOW: ${{ github.event.inputs.flow }}
+          FLOW: ${{ github.event.client_payload.flow }}
+      
+      - name: Install Snapcraft
+        if: startsWith(matrix.os, 'ubuntu')
+        uses: samuelmeuli/action-snapcraft@v1
+        with:
+          snapcraft_token: ${{ secrets.SNAP_TOKEN }}
 
-      #- name: Set GitHub config
-      #  run: |
-      #    git config --local user.email "mguimaraes@keep.pt"
-      #    git config --local user.name "Miguel Guimarães"
-      #
-      #- name: Run release script
-      #  run: ./scripts/release.sh $TAG
-      #  env:
-      #    TAG: ${{ github.event.client_payload.version }}
-      #
-      #- name: Push changes
-      #  uses: ad-m/github-push-action@master
-      #  with:
-      #    github_token: ${{ secrets.GITHUB_TOKEN }}
-      #    branch: ${{ github.ref }}
+      - name: Upload to snapcraft
+        if: startsWith(matrix.os, 'ubuntu')
+        run: snapcraft upload --release=stable dist/dbptk-desktop*.snap
   
   deploy:
     needs: [build]
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
@@ -100,9 +80,19 @@ jobs:
         uses: actions/cache@v2
         with:
           path: dist/*
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-      - name: List directories
-        run: ls dist
+          key: ${{ runner.os }}-${{ github.event.client_payload.version }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
+            dist/dbptk-desktop-${{ github.event.client_payload.version }}.exe
+            dist/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
+            dist/latest*
+          name: Version ${{ github.event.client_payload.version }}
+          tag_name: ${{ github.event.client_payload.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   tag:
     needs: [build, deploy]
@@ -112,4 +102,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+      - name: Set GitHub config
+        run: |
+          git config --local user.email "mguimaraes@keep.pt"
+          git config --local user.name "Miguel Guimarães"
       
+      - name: Run release script
+        run: ./scripts/release.sh $TAG
+        env:
+          TAG: ${{ github.event.client_payload.version }}
+      
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
