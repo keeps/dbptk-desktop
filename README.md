@@ -52,7 +52,7 @@ Or if the problem/suggestion is related to the Database Preservation Toolkit, cr
 
 For more information or commercial support, contact [KEEP SOLUTIONS](http://www.keep.pt/contactos/?lang=en).
 
-## Development [![Build Status](https://travis-ci.org/keeps/dbptk-desktop.png?branch=master)](https://travis-ci.org/keeps/dbptk-desktop)
+## Development [![Deploy](https://github.com/keeps/dbptk-desktop/actions/workflows/deploy.yml/badge.svg?branch=master)](https://github.com/keeps/dbptk-desktop/actions/workflows/deploy.yml)
 
 ## License
 

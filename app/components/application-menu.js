@@ -126,6 +126,8 @@ module.exports = class ApplicationMenu {
               click: () => {
                 if (process.env.SNAP_USER_COMMON) {
                   shell.openItem(path.join(process.env.SNAP_USER_COMMON, 'log'));
+                } else if (process.env.DBVTK_HOME) {
+                  shell.openItem(path.join(process.env.DBVTK_HOME, 'log'));
                 } else {
                   shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'log'));
                 }
@@ -153,6 +155,8 @@ module.exports = class ApplicationMenu {
           click: () => {
             if (process.env.SNAP_USER_COMMON) {
               shell.openItem(path.join(process.env.SNAP_USER_COMMON, 'reports'));
+            } else if (process.env.DBVTK_HOME) {
+              shell.openItem(path.join(process.env.DBVTK_HOME, 'reports'));
             } else {
               shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'reports'));
             }
