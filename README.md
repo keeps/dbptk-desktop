@@ -16,11 +16,11 @@ You can download the latest release for your operating system [here](https://git
 #### For Mac
 - Download [dmg](https://github.com/keeps/dbptk-desktop/releases/latest) file
 - Double-click on the downloaded file to expand the contents.
-- Drag dbvtk-gui to the Applications folder
+- Drag dbptk-desktop to the Applications folder
 
 #### For Windows
 - Download [exe](https://github.com/keeps/dbptk-desktop/releases/latest) file
-- Once it is downloaded, run the installer (dbvtk-gui.exe).
+- Once it is downloaded, run the installer (dbptk-desktop.exe).
 
 **This app will automatically update when a new release is available.**
 
