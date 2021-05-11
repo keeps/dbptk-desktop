@@ -1,5 +1,4 @@
 const { ipcRenderer } = require('electron');
-const { dialog } = require('electron').remote;
 const os = require('os');
 
 let applyBtn = document.getElementById("apply")
@@ -9,11 +8,13 @@ applyBtn.addEventListener("click", function (event) {
     event.preventDefault();
     let language = document.getElementById("language");
     let tmpDir = document.getElementById("tmpDir");
+    let useGMT = document.getElementById("useGMT");
     let memory = document.getElementById("memory");
     let data = {
         "language": language.value,
         "memory": memory.value,
-        "tmpDir": tmpDir.value
+        "tmpDir": tmpDir.value,
+        "useGMT": useGMT.checked == true
     }
     ipcRenderer.send("APPLY_SETTINGS_EVENT", data)
 })
@@ -45,15 +46,15 @@ ipcRenderer.on("BUILD_SETTINGS_EVENT", (event, data) => {
 
     let btnOpen = document.getElementById("btnOpen");
     btnOpen.addEventListener('click', function () {
-        var path = dialog.showOpenDialog({
+        var path = ipcRenderer.sendSync('show-open-dialog', {
             properties: ['openDirectory']
           })
-          let tmpDir = document.getElementById("tmpDir");
-          if (path) {
-            applyBtn.disabled = false;
-            notificationChanges.style.display = "block"
-            tmpDir.value = path;
-          }
+        let tmpDir = document.getElementById("tmpDir");
+        if (path) {
+        applyBtn.disabled = false;
+        notificationChanges.style.display = "block"
+        tmpDir.value = path;
+        }
     })
 
     if (data.tmpDir) {
@@ -62,6 +63,15 @@ ipcRenderer.on("BUILD_SETTINGS_EVENT", (event, data) => {
     } else {
         tmpDir.value = os.tmpdir();
     }
+
+    let useGMT = document.getElementById("useGMT");
+    if(data.useGMT) {
+        useGMT.checked = true
+    }
+    useGMT.addEventListener('change', function () {
+        applyBtn.disabled = false;
+        notificationChanges.style.display = "block"
+    })
 
     memory.max = data.OsMemory
     memory.min = data.minMemory

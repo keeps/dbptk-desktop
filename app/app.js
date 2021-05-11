@@ -44,6 +44,7 @@ app.on('ready', async function () {
         }
     } else {
         server.appUrl = server.appUrl + ":" + server.port;
+        loading.hide();
     }
     initApp()
 });
@@ -95,6 +96,7 @@ function initApp(){
         minWidth: 800,
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false,
             preload: app.getAppPath() + '/app/helpers/preloader.js'
         }
     });

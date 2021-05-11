@@ -9,6 +9,32 @@ const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
 const MemoryManager = require('../helpers/memoryManagerHelper');
 const electronSettings = require('electron-settings');
 const log = require('electron-log');
+const ipc = require('electron').ipcMain
+const dialog = require('electron').dialog
+
+ipc.on('show-open-dialog', function (event, options) {
+    dialog.showOpenDialog(options).then(result => {
+        event.returnValue = result.filePaths
+       }).catch(err => {
+        log.error(err)
+       })
+})
+
+ipc.on('show-save-dialog', function (event, options) {
+    dialog.showSaveDialog(options).then(result => {
+        event.returnValue = result.filePath
+       }).catch(err => {
+        log.error(err)
+       })
+})
+
+ipc.on('show-confirmation-dialog', function (event, options) {
+    dialog.showMessageBox(options).then(result => {
+        event.returnValue = result
+       }).catch(err => {
+        log.error(err)
+       })
+})
 
 module.exports = class Dbvtk {
     constructor() {
@@ -53,6 +79,7 @@ module.exports = class Dbvtk {
         let memoryManager = new MemoryManager()
         let maxHeapMemory = memoryManager.getMaxHeapMemorySettings();
         let tmpDir = electronSettings.get('tmpDir');
+        let useGMT = electronSettings.get('useGMT');
 
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [
@@ -61,8 +88,12 @@ module.exports = class Dbvtk {
             "-Dserver.port.file=" + serverPortFile,
             "-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl",
             "-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl",
-            "-Denv=desktop"
+            "-Denv=desktop",
         ];
+
+        if (useGMT) {
+            javaVMParameters.push("-Duser.timezone=GMT");
+        }
 
         if ( maxHeapMemory != null ) {
             javaVMParameters.push("-Xmx" + maxHeapMemory)

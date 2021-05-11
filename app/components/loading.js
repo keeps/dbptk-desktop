@@ -9,7 +9,11 @@ module.exports = class Loading {
             frame: false,
             title: "Loading",
             width: 300,
-            height: 150
+            height: 150,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+            }
         });
         if(process.platform === "linux" && !process.env.SNAP){
             this.window.setIcon(app.getAppPath() + '/buildResources/96x96.png')

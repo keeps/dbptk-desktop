@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#DBPTK_UI_VERSION=2.6.5
+#DBPTK_UI_VERSION=2.5.5
 #FLOW=main | staging
 
 # Check if FLOW is main or stating
@@ -17,7 +17,8 @@ if [ "$FLOW" == "main" ]; then
         response=$(curl --write-out %{http_code} -H "Authorization: token ${GITHUB_TOKEN}" -L $GITHUB_PACKAGES_DL_LINK -o $DBPTK_UI_WAR_TARGET)
     
         if [ "${response}" != "200" ]; then
-            echo "Error! version does not exist in Bintray"
+            rm -rf ${DBPTK_UI_WAR_TARGET}
+            echo "Error! version does not exist in Github"
             exit 1;
         fi
     fi

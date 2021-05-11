@@ -7,9 +7,10 @@ const path = require('path');
 
 function buildUrl(win, language, path) {
   electronSettings.set('language', language);
-  let currLocation = win.webContents.getURL();
-  let locArray = currLocation.split("#")[0].split("?");
-  return locArray[0] + "?locale=" + language + path
+  let currLocation = win.getURL();
+  let locArray = currLocation.split("locale=")[0];
+
+  return locArray + "locale=" + language + path
 }
 
 module.exports = class ApplicationMenu {
@@ -55,7 +56,7 @@ module.exports = class ApplicationMenu {
               checked: (electronSettings.get('language') == 'cs'),
               click: () => {
                 this.language = "cs"
-                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+                win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
               }
             },
             {
@@ -64,7 +65,7 @@ module.exports = class ApplicationMenu {
               checked: (electronSettings.get('language') == 'de'),
               click: () => {
                 this.language = "de"
-                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+                win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
               }
             },
             {
@@ -73,7 +74,7 @@ module.exports = class ApplicationMenu {
               checked: (electronSettings.get('language') == null || electronSettings.get('language') == 'en'),
               click: () => {
                 this.language = "en"
-                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+                win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
               }
             },
             {
@@ -82,7 +83,7 @@ module.exports = class ApplicationMenu {
               checked: (electronSettings.get('language') == 'et'),
               click: () => {
                 this.language = "et"
-                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+                win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
               }
             },
             {
@@ -91,7 +92,7 @@ module.exports = class ApplicationMenu {
               checked: (electronSettings.get('language') == 'pt_PT'),
               click: () => {
                 this.language = "pt_PT"
-                win.loadURL(buildUrl(win, this.language, "#" + win.webContents.getURL().split("#")[1]));
+                win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
               }
             }
           ]
@@ -125,11 +126,11 @@ module.exports = class ApplicationMenu {
               role: 'dbvtkLog',
               click: () => {
                 if (process.env.SNAP_USER_COMMON) {
-                  shell.openItem(path.join(process.env.SNAP_USER_COMMON, 'log'));
+                  shell.openPath(path.join(process.env.SNAP_USER_COMMON, 'log'));
                 } else if (process.env.DBVTK_HOME) {
-                  shell.openItem(path.join(process.env.DBVTK_HOME, 'log'));
+                  shell.openPath(path.join(process.env.DBVTK_HOME, 'log'));
                 } else {
-                  shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'log'));
+                  shell.openPath(path.join(app.getPath('home'), '.dbvtk', 'log'));
                 }
               }
             },
@@ -137,14 +138,14 @@ module.exports = class ApplicationMenu {
               label: 'JVM',
               role: 'jvmLog',
               click: () => {
-                shell.openItem(getJvmLog());
+                shell.openPath(getJvmLog());
               }
             },
             {
               label: 'application',
               role: 'applicationLog',
               click: () => {
-                shell.openItem(log.transports.file.getFile().path);
+                shell.openPath(log.transports.file.getFile().path);
               }
             }
           ]
@@ -154,11 +155,11 @@ module.exports = class ApplicationMenu {
           role: 'reports',
           click: () => {
             if (process.env.SNAP_USER_COMMON) {
-              shell.openItem(path.join(process.env.SNAP_USER_COMMON, 'reports'));
+              shell.openPath(path.join(process.env.SNAP_USER_COMMON, 'reports'));
             } else if (process.env.DBVTK_HOME) {
-              shell.openItem(path.join(process.env.DBVTK_HOME, 'reports'));
+              shell.openPath(path.join(process.env.DBVTK_HOME, 'reports'));
             } else {
-              shell.openItem(path.join(app.getPath('home'), '.dbvtk', 'reports'));
+              shell.openPath(path.join(app.getPath('home'), '.dbvtk', 'reports'));
             }
           }
         },
