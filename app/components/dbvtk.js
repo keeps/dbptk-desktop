@@ -79,7 +79,7 @@ module.exports = class Dbvtk {
         let memoryManager = new MemoryManager()
         let maxHeapMemory = memoryManager.getMaxHeapMemorySettings();
         let tmpDir = electronSettings.get('tmpDir');
-        let useGMT = electronSettings.get('useGMT');
+        let disableTimezone = electronSettings.get('disableTimezone');
 
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [
@@ -91,7 +91,7 @@ module.exports = class Dbvtk {
             "-Denv=desktop",
         ];
 
-        if (useGMT) {
+        if (disableTimezone) {
             javaVMParameters.push("-Duser.timezone=GMT");
         }
 
@@ -107,6 +107,8 @@ module.exports = class Dbvtk {
             log.info("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
             javaVMParameters.push("-Ddbvtk.home=" + process.env.SNAP_USER_COMMON);
         }
+
+        console.log(javaVMParameters)
 
         this.process = spawn(java.path, ['-jar'].concat(javaVMParameters).concat("resources/war/" + this.filename), {
             cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/'

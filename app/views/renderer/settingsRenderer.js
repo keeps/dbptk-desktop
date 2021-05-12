@@ -8,13 +8,13 @@ applyBtn.addEventListener("click", function (event) {
     event.preventDefault();
     let language = document.getElementById("language");
     let tmpDir = document.getElementById("tmpDir");
-    let useGMT = document.getElementById("useGMT");
+    let disableTimezone = document.getElementById("disableTimezone");
     let memory = document.getElementById("memory");
     let data = {
         "language": language.value,
         "memory": memory.value,
         "tmpDir": tmpDir.value,
-        "useGMT": useGMT.checked == true
+        "disableTimezone": disableTimezone.checked == true
     }
     ipcRenderer.send("APPLY_SETTINGS_EVENT", data)
 })
@@ -64,11 +64,11 @@ ipcRenderer.on("BUILD_SETTINGS_EVENT", (event, data) => {
         tmpDir.value = os.tmpdir();
     }
 
-    let useGMT = document.getElementById("useGMT");
-    if(data.useGMT) {
-        useGMT.checked = true
+    let disableTimezone = document.getElementById("disableTimezone");
+    if(data.disableTimezone) {
+        disableTimezone.checked = true
     }
-    useGMT.addEventListener('change', function () {
+    disableTimezone.addEventListener('change', function () {
         applyBtn.disabled = false;
         notificationChanges.style.display = "block"
     })

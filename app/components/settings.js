@@ -23,7 +23,7 @@ module.exports = class Settings {
             show: false,
             title: "Settings",
             resizable: false,
-            width: 450,
+            width: 500,
             height: 520,
             parent: BrowserWindow.getFocusedWindow(),
             modal: true,
@@ -65,7 +65,7 @@ module.exports = class Settings {
             this.memoryManager.setMaxHeapMemorySettings(data.memory);
             electronSettings.set("language", data.language)
             electronSettings.set('tmpDir', data.tmpDir)
-            electronSettings.set('useGMT', data.useGMT)
+            electronSettings.set('disableTimezone', data.disableTimezone)
             app.relaunch();
             app.quit();
         });
@@ -92,7 +92,7 @@ module.exports = class Settings {
             "freeMemory" : this.memoryManager.getFreeMemory(),
             "minMemory" : this.memoryManager.getMinHeapMemory(),
             "tmpDir" : electronSettings.get('tmpDir'),
-            "useGMT" : electronSettings.get('useGMT'),
+            "disableTimezone" : electronSettings.get('disableTimezone', true),
             "fileLocation" : electronSettings.file()
         }
         this.window.webContents.send("BUILD_SETTINGS_EVENT", data);

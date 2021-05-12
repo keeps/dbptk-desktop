@@ -38,7 +38,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            padding: 70px 10% 20px;
+            padding: 70px 5% 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -71,10 +71,34 @@
             width: 70%;
             display: flex;
         }
+        .setting-context .value input[type='text'] {
+            flex-grow: 1;
+        }
 
         .setting-info {
             padding: 5px 0;
             color: #949494;
+        }
+
+        .setting-context-checkbox {
+            width: 100%;
+            display: flex;
+            height: 27px;
+            line-height: 27px
+        }
+
+        .setting-context-checkbox .value {
+            display: flex;
+            align-items: center;
+        }
+
+        .setting-context-checkbox .value input{
+            padding-left: 0;
+            margin-left: 0;
+        }
+
+        .setting-context-checkbox .label {
+            color: #5a5a5a;
         }
 
         .notification {
@@ -235,26 +259,26 @@
                             <label for="memory" class="memoryLabelSize">GB</label>
                         </div>
                     </div>
-                    <div class="setting-info">The memory allocated for the main application (minimum value is 250mb).</div>
+                    <div class="setting-info">The memory allocated for the main application (minimum value is 250MB).</div>
                 </div>
                 <div class="setting-item">
                     <div class="setting-context">
-                        <span class="label">Tmp dir</span>
+                        <span class="label">Temporary folder</span>
                         <div class="value">
                             <input id="tmpDir" name="tmpdir" type="text" disabled>
                             <button id="btnOpen" name="btnOpen">Choose</button>
                         </div>
                     </div>
-                    <div class="setting-info">Set the temporary folder for the application</div>
+                    <div class="setting-info">define the location where temporary files will be created during the process of creating the SIARD file.</div>
                 </div>
                 <div class="setting-item">
-                    <div class="setting-context">
-                        <span class="label">Enable GMT</span>
+                    <div class="setting-context-checkbox">
                         <div class="value">
-                            <input type="checkbox" id="useGMT" name="useGMT">
+                            <input type="checkbox" id="disableTimezone" name="disableTimezone">
                         </div>
+                        <span class="label">Disable timezone conversion</span>
                     </div>
-                    <div class="setting-info">tells Java not to do any unexpected conversions when handling the timestamp fields</div>
+                    <div class="setting-info">Do not convert timestamp fields during database extraction to SIARD</div>
                 </div>
                 <div class="setting-item">
                     <div class="setting-info">

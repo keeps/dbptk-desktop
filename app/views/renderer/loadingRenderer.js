@@ -13,7 +13,6 @@ showLogsBtn.addEventListener("click", function(event) {
     showLogsBtn.style.display = "none";
     hideLogsBtn.style.display = "block";
     copyLogsBtn.style.display = "block";
-    settingsBtn.style.display = "block";
     ipcRenderer.send("REZISE", true)
 })
 
@@ -23,7 +22,6 @@ hideLogsBtn.addEventListener("click", function(event) {
     showLogsBtn.style.display = "block";
     hideLogsBtn.style.display = "none";
     copyLogsBtn.style.display = "none";
-    settingsBtn.style.display = "none";
     ipcRenderer.send("REZISE", false)
 })
 
