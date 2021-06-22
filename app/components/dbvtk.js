@@ -67,11 +67,15 @@ module.exports = class Dbvtk {
     async createProcess() {
         let java = getjavaVersionAndPath();
 
-        let serverPortFile = tmp.tmpNameSync();
+        const dbptkDesktopTmpDir = tmp.dirSync({ template: 'dbptkDesktopTmpDir-XXXXXX' });
+        log.info("DBPTK Desktop tmp dir at " + dbptkDesktopTmpDir.name)
+
+        let serverPortFile = tmp.tmpNameSync({dir: dbptkDesktopTmpDir.name, template: 'port-XXXXXX' });
         log.info("Port file at " + serverPortFile);
 
-        let jvmLog = tmp.tmpNameSync();
+        let jvmLog = tmp.tmpNameSync({dir: dbptkDesktopTmpDir.name, template: 'jvm-XXXXXX.log' });
         setJvmLog(jvmLog);
+
         log.info("JVM log at " + jvmLog);
         this.loading.showLog(jvmLog);
     

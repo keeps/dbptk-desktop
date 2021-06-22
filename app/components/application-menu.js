@@ -138,14 +138,14 @@ module.exports = class ApplicationMenu {
               label: 'JVM',
               role: 'jvmLog',
               click: () => {
-                shell.openPath(getJvmLog());
+                shell.showItemInFolder(getJvmLog());
               }
             },
             {
-              label: 'application',
+              label: 'Application',
               role: 'applicationLog',
               click: () => {
-                shell.openPath(log.transports.file.getFile().path);
+                shell.showItemInFolder(log.transports.file.getFile().path);
               }
             }
           ]
