@@ -1,10 +1,7 @@
 #!/bin/bash
 
-set -ex
 #DBPTK_UI_VERSION=2.5.5
 #FLOW=main | staging
-
-echo $(jq --version)
 
 function verify_checksum() {
     # args: os, image_type, architecture, jvm_impl, checksum
