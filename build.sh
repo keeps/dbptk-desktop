@@ -21,8 +21,12 @@ function verify_checksum() {
         return 1
     fi
 
-    API_CHECKSUM=$(cat $API_CHECKSUM_FILE |
-        jq -r --arg os $OS --arg jvm_impl $JVM_IMPL --arg arch $ARCH --arg image_type $IMAGE_TYPE '.[].binary | select(.image_type == $image_type) | select(.heap_size == "normal") | select(.architecture == $arch) | select(.jvm_impl == $jvm_impl) | select(.os == $os) | .package.checksum')
+    if [ ! -f "$API_CHECKSUM_FILE" ]; then
+        echo "Failed to write cURL result to temporary file"
+        return 1
+    fi
+
+    API_CHECKSUM=$(jq -r --arg os $OS --arg jvm_impl $JVM_IMPL --arg arch $ARCH --arg image_type $IMAGE_TYPE '.[].binary | select(.image_type == $image_type) | select(.heap_size == "normal") | select(.architecture == $arch) | select(.jvm_impl == $jvm_impl) | select(.os == $os) | .package.checksum' $API_CHECKSUM_FILE)
 
     if [ $API_CHECKSUM == $DL_CHECKSUM ]; then
         return 0
