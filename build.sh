@@ -77,7 +77,7 @@ for os in "${OS[@]}"; do
                 exit 1
             fi
 
-            DL_CHECKSUM=$(sha256sum $JRE_TARGET)
+            DL_CHECKSUM=$(shasum -a 256 $JRE_TARGET)
 
             if verify_checksum $os "jre" $arch "hotspot" $DL_CHECKSUM; then
                 echo "Checksum verification passed"
