@@ -10,6 +10,7 @@ function verify_checksum() {
     IMAGE_TYPE=$2
     ARCH=$3
     JVM_IMPL=$4
+    HEAP_SIZE="normal"
     DL_CHECKSUM=$5
     API_CHECKSUM_FILE=/tmp/assets.json
 
@@ -26,7 +27,7 @@ function verify_checksum() {
         return 1
     fi
 
-    API_CHECKSUM=$(jq -r --arg os $OS --arg jvm_impl $JVM_IMPL --arg arch $ARCH --arg image_type $IMAGE_TYPE '.[].binary | select(.image_type == $image_type) | select(.heap_size == "normal") | select(.architecture == $arch) | select(.jvm_impl == $jvm_impl) | select(.os == $os) | .package.checksum' $API_CHECKSUM_FILE)
+    API_CHECKSUM=$(cat $API_CHECKSUM_FILE | jq -r --arg os $OS --arg jvm_impl $JVM_IMPL --arg arch $ARCH --arg image_type $IMAGE_TYPE --arg head_size $HEAP_SIZE '.[].binary | select(.image_type == $image_type) | select(.heap_size == $heap_size) | select(.architecture == $arch) | select(.jvm_impl == $jvm_impl) | select(.os == $os) | .package.checksum')
 
     if [ $API_CHECKSUM == $DL_CHECKSUM ]; then
         return 0
