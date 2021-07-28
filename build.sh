@@ -82,7 +82,7 @@ for os in "${OS[@]}"; do
                 exit 1
             fi
 
-            if [ "$RUNNER_OS" == "macOS"]; then
+            if [ "${RUNNER_OS}" == "macOS" ]; then
                 DL_CHECKSUM=$(shasum -a 256 $JRE_TARGET)
             else
                 DL_CHECKSUM=$(sha256sum $JRE_TARGET)
