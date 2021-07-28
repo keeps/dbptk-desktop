@@ -39,6 +39,7 @@ jobs:
         run: yarn --link-duplicates --pure-lockfile && yarn dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUNNER_OS: ${{ runner.os }}
 
       - name: Install Snapcraft
         if: startsWith(matrix.os, 'ubuntu')

@@ -36,6 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           FLOW: ${{ github.event.client_payload.flow }}
+          RUNNER_OS: ${{ runner.os }}
 
       - name: Package Linux & Windows
         if: startsWith(matrix.os, 'ubuntu')
@@ -44,6 +45,7 @@ jobs:
             --env FLOW="${FLOW}" \
             --env GITHUB_TOKEN="${GITHUB_TOKEN}" \
             --env DBPTK_UI_VERSION="${DBPTK_UI_VERSION}" \
+            --env RUNNER_OS="${RUNNER_OS}" \
             -v ${PWD}:/project \
             -v ~/.cache/electron:/root/.cache/electron \
             -v ~/.cache/electron-builder:/root/.cache/electron-builder \
@@ -53,6 +55,7 @@ jobs:
           DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           FLOW: ${{ github.event.client_payload.flow }}
+          RUNNER_OS: ${{ runner.os }}
 
       - name: Set GitHub config
         if: startsWith(matrix.os, 'ubuntu')
