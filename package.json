@@ -1,8 +1,8 @@
 {
   "name": "dbptk-desktop",
   "description": "Database Preservation Toolkit",
-  "version": "2.5.8",
-  "dbvtkVersion": "2.5.8",
+  "version": "2.5.9",
+  "dbvtkVersion": "2.5.9",
   "author": "Luis Faria <lfaria@keep.pt>",
   "main": "./app/app.js",
   "build": {
