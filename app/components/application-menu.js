@@ -6,7 +6,7 @@ const log = require('electron-log');
 const path = require('path');
 
 function buildUrl(win, language, path) {
-  electronSettings.set('language', language);
+  electronSettings.setSync('language', language);
   let currLocation = win.getURL();
   let locArray = currLocation.split("locale=")[0];
 
@@ -15,7 +15,7 @@ function buildUrl(win, language, path) {
 
 module.exports = class ApplicationMenu {
   constructor() {
-    this.language = electronSettings.get('language') != null ? electronSettings.get('general.language') : "en";
+    this.language = electronSettings.getSync('language') != null ? electronSettings.getSync('general.language') : "en";
     this.template;
   }
 
@@ -53,7 +53,7 @@ module.exports = class ApplicationMenu {
             {
               label: 'Čeština',
               type: 'radio',
-              checked: (electronSettings.get('language') == 'cs'),
+              checked: (electronSettings.getSync('language') == 'cs'),
               click: () => {
                 this.language = "cs"
                 win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
@@ -62,7 +62,7 @@ module.exports = class ApplicationMenu {
             {
               label: 'Deutsch',
               type: 'radio',
-              checked: (electronSettings.get('language') == 'de'),
+              checked: (electronSettings.getSync('language') == 'de'),
               click: () => {
                 this.language = "de"
                 win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
@@ -71,7 +71,7 @@ module.exports = class ApplicationMenu {
             {
               label: 'English',
               type: 'radio',
-              checked: (electronSettings.get('language') == null || electronSettings.get('language') == 'en'),
+              checked: (electronSettings.getSync('language') == null || electronSettings.getSync('language') == 'en'),
               click: () => {
                 this.language = "en"
                 win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
@@ -80,7 +80,7 @@ module.exports = class ApplicationMenu {
             {
               label: 'Eesti',
               type: 'radio',
-              checked: (electronSettings.get('language') == 'et'),
+              checked: (electronSettings.getSync('language') == 'et'),
               click: () => {
                 this.language = "et"
                 win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
@@ -89,7 +89,7 @@ module.exports = class ApplicationMenu {
             {
               label: 'Português Europeu',
               type: 'radio',
-              checked: (electronSettings.get('language') == 'pt_PT'),
+              checked: (electronSettings.getSync('language') == 'pt_PT'),
               click: () => {
                 this.language = "pt_PT"
                 win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));

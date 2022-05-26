@@ -78,7 +78,7 @@ ipcMain.on('OPEN_SETTINGS', (event, arg) => {
 })
 
 function initApp(){
-    const language = settings.get('language')!= null ? settings.get('language') : "en";
+    const language = settings.getSync('language') != null ? settings.getSync('language') : "en";
     // Use 90% of screen size
     const screenSize = 0.9;
     const screen = require('electron').screen

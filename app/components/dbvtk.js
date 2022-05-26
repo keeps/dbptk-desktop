@@ -82,8 +82,8 @@ module.exports = class Dbvtk {
 
         let memoryManager = new MemoryManager()
         let maxHeapMemory = memoryManager.getMaxHeapMemorySettings();
-        let tmpDir = electronSettings.get('tmpDir');
-        let disableTimezone = electronSettings.get('disableTimezone');
+        let tmpDir = electronSettings.getSync('tmpDir');
+        let disableTimezone = electronSettings.getSync('disableTimezone');
 
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [

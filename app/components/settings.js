@@ -63,9 +63,9 @@ module.exports = class Settings {
             this.log.info("Applying new settings")
             this.log.info("Memory = " + data.memory)
             this.memoryManager.setMaxHeapMemorySettings(data.memory);
-            electronSettings.set("language", data.language)
-            electronSettings.set('tmpDir', data.tmpDir)
-            electronSettings.set('disableTimezone', data.disableTimezone)
+            electronSettings.setSync("language", data.language)
+            electronSettings.setSync('tmpDir', data.tmpDir)
+            electronSettings.setSync('disableTimezone', data.disableTimezone)
             app.relaunch();
             app.quit();
         });
@@ -86,13 +86,13 @@ module.exports = class Settings {
 
     buildSettings() {
         const data = {
-            "language" : electronSettings.get('language'),
+            "language" : electronSettings.getSync('language'),
             "maxHeapMemorySettings" : this.memoryManager.getMaxHeapMemorySettings(),
             "OsMemory" : this.memoryManager.getOsMemoryTotal(),
             "freeMemory" : this.memoryManager.getFreeMemory(),
             "minMemory" : this.memoryManager.getMinHeapMemory(),
-            "tmpDir" : electronSettings.get('tmpDir'),
-            "disableTimezone" : electronSettings.get('disableTimezone', true),
+            "tmpDir" : electronSettings.getSync('tmpDir'),
+            "disableTimezone" : electronSettings.getSync('disableTimezone', true),
             "fileLocation" : electronSettings.file()
         }
         this.window.webContents.send("BUILD_SETTINGS_EVENT", data);
