@@ -5,7 +5,25 @@ on:
     types: ["dispatch-main"]
 
 jobs:
+  preprocessing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Update package.json
+        run: |
+          cat package.json | jq ".version = \"$RELEASE_VERSION\"" | jq ".dbvtkVersion = \"$RELEASE_VERSION\"" > tmp
+          mv tmp package.json
+        env:
+          RELEASE_VERSION: ${{ github.event.client_payload.version }}
+      - name: Cache dist
+        uses: actions/cache/save@v3
+        with:
+          path: package.json
+          key: ${{ runner.os }}-${{ github.event.client_payload.version }}-package.json
   build:
+    needs: preprocessing
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -14,22 +32,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-      - name: Update package.json
-        run: |
-          cat package.json | jq ".version = \"$RELEASE_VERSION\"" | jq ".dbvtkVersion = \"$RELEASE_VERSION\"" > tmp
-          mv tmp package.json
-        env:
-          RELEASE_VERSION: ${{ github.event.client_payload.version }}
-      - name: Cache dist
-        uses: actions/cache@v3
+      - name: Cache restore
+        uses: actions/cache/restore@v3
         with:
-          path: dist/*
-          key: ${{ runner.os }}-${{ github.event.client_payload.version }}
+          path: package.json
+          key: ${{ runner.os }}-${{ github.event.client_payload.version }}-package.json
+          fail-on-cache-miss: true
       - name: Package
         run: yarn --link-duplicates --pure-lockfile && yarn dist
         env:
@@ -37,6 +50,11 @@ jobs:
           DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           FLOW: ${{ github.event.client_payload.flow }}
           RUNNER_OS: ${{ runner.os }}
+      - name: Cache restore
+        uses: actions/cache/save@v3
+        with:
+          path: dist/*
+          key: ${{ runner.os }}-${{ github.event.client_payload.version }}
 
   deploy:
     needs: [build]
@@ -76,6 +94,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
       - name: Set GitHub config
         run: |
           git config --local user.email "mguimaraes@keep.pt"
@@ -85,7 +105,6 @@ jobs:
         run: ./scripts/release.sh $TAG
         env:
           TAG: ${{ github.event.client_payload.version }}
-
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
