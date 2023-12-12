@@ -82,10 +82,10 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ${{steps.download.outputs.download-path}}/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
-            ${{steps.download.outputs.download-path}}/dbptk-desktop-${{ github.event.client_payload.version }}.exe
-            ${{steps.download.outputs.download-path}}/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
-            ${{steps.download.outputs.download-path}}/latest*
+            ${{steps.download.outputs.download-path}}/artifact/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
+            ${{steps.download.outputs.download-path}}/artifact/dbptk-desktop-${{ github.event.client_payload.version }}.exe
+            ${{steps.download.outputs.download-path}}/artifact/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
+            ${{steps.download.outputs.download-path}}/artifact/latest*
           name: Version ${{ github.event.client_payload.version }}
           tag_name: v${{ github.event.client_payload.version }}
           draft: true
