@@ -38,25 +38,6 @@ jobs:
           FLOW: ${{ github.event.client_payload.flow }}
           RUNNER_OS: ${{ runner.os }}
 
-      - name: Set GitHub config
-        if: startsWith(matrix.os, 'ubuntu')
-        run: |
-          git config --local user.email "mguimaraes@keep.pt"
-          git config --local user.name "Miguel Guimarães"
-
-      - name: Run release script
-        if: startsWith(matrix.os, 'ubuntu')
-        run: ./scripts/release.sh $TAG
-        env:
-          TAG: ${{ github.event.client_payload.version }}
-
-      - name: Push changes
-        if: startsWith(matrix.os, 'ubuntu')
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
   deploy:
     needs: [build]
 
@@ -89,3 +70,24 @@ jobs:
         with:
           snap: dist/dbptk-desktop-${{ github.event.client_payload.version }}.snap
           release: stable
+
+  update:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set GitHub config
+        run: |
+          git config --local user.email "mguimaraes@keep.pt"
+          git config --local user.name "Miguel Guimarães"
+
+      - name: Run release script
+        run: ./scripts/release.sh $TAG
+        env:
+          TAG: ${{ github.event.client_payload.version }}
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
