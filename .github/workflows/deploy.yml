@@ -17,11 +17,11 @@ jobs:
           mv tmp package.json
         env:
           RELEASE_VERSION: ${{ github.event.client_payload.version }}
-      - name: Cache dist
+      - name: Cache package.json
         uses: actions/cache/save@v3
         with:
           path: package.json
-          key: ${{ runner.os }}-${{ github.event.client_payload.version }}-package.json
+          key: ${{ github.event.client_payload.version }}-package.json
   build:
     needs: preprocessing
     strategy:
@@ -41,7 +41,7 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: package.json
-          key: ${{ runner.os }}-${{ github.event.client_payload.version }}-package.json
+          key: ${{ github.event.client_payload.version }}-package.json
           fail-on-cache-miss: true
       - name: Package
         run: yarn --link-duplicates --pure-lockfile && yarn dist
@@ -50,7 +50,7 @@ jobs:
           DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           FLOW: ${{ github.event.client_payload.flow }}
           RUNNER_OS: ${{ runner.os }}
-      - name: Cache restore
+      - name: Cache dist
         uses: actions/cache/save@v3
         with:
           path: dist/*
