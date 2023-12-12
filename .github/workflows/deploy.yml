@@ -75,16 +75,17 @@ jobs:
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v3
+        id: download
         with:
-          path: artifact
+          path: dist
       - name: Release to GitHub
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
-            dist/dbptk-desktop-${{ github.event.client_payload.version }}.exe
-            dist/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
-            dist/latest*
+            ${{steps.download.outputs.download-path}}/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
+            ${{steps.download.outputs.download-path}}/dbptk-desktop-${{ github.event.client_payload.version }}.exe
+            ${{steps.download.outputs.download-path}}/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
+            ${{steps.download.outputs.download-path}}/latest*
           name: Version ${{ github.event.client_payload.version }}
           tag_name: v${{ github.event.client_payload.version }}
           draft: true
