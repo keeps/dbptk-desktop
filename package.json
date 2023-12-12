@@ -27,7 +27,7 @@
       "asarUnpack": [
         "resources/jre/mac/${arch}"
       ],
-      "icon": "buildResources/icon.icns"
+      "icon": "icon.icns"
     },
     "linux": {
       "files": [
@@ -41,7 +41,7 @@
       "asarUnpack": [
         "resources/jre/linux/${arch}"
       ],
-      "icon": "buildResources/icon.png"
+      "icon": "icon.png"
     },
     "snap": {
       "plugs": [
@@ -75,7 +75,7 @@
       "asarUnpack": [
         "resources/jre/windows/${arch}"
       ],
-      "icon": "buildResources/icon.ico"
+      "icon": "icon.ico"
     },
     "publish": [
       {
