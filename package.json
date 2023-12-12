@@ -90,13 +90,14 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder",
     "dist-lw": "electron-builder -lw",
-    "preinstall": "bash build.sh"
+    "preinstall": "bash build.sh",
+    "snap": "electron-builder --linux snap"
   },
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
-    "electron": "19.0.1",
+    "electron": "^28.0.0",
     "electron-builder": "^23.0.3",
-    "electron-packager": "^15.5.1"
+    "electron-packager": "^17.1.2"
   },
   "dependencies": {
     "electron-log": "^4.4.7",
@@ -104,6 +105,6 @@
     "electron-updater": "^5.0.1",
     "tmp": "^0.2.1",
     "tree-kill": "^1.2.2",
-    "wait-on": "^6.0.1"
+    "wait-on": "^7.2.0"
   }
 }
