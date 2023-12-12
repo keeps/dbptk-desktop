@@ -52,7 +52,7 @@ jobs:
           FLOW: ${{ github.event.client_payload.flow }}
           RUNNER_OS: ${{ runner.os }}
       - name: Cache dist
-        uses: actions/cache/save@v3
+        uses: actions/cache@v3
         with:
           path: dist/*
           key: ${{ github.event.client_payload.version }}-dist
@@ -65,7 +65,7 @@ jobs:
 
     steps:
       - name: Cache dist
-        uses: actions/cache@v3
+        uses: actions/cache/restore@v3
         with:
           path: dist/*
           key: ${{ github.event.client_payload.version }}-dist
