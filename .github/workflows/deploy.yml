@@ -103,13 +103,12 @@ jobs:
           tag_name: v${{ github.event.client_payload.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install Snapcraft
+      
+      - name: Publish to Snap 
         if: startsWith(matrix.os, 'ubuntu')
-        uses: samuelmeuli/action-snapcraft@v1
+        uses: snapcore/action-publish@v1
         env:
-          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_TOKEN }}
-
-      - name: Upload to snapcraft
-        if: startsWith(matrix.os, 'ubuntu')
-        run: snapcraft upload --release=stable dist/dbptk-desktop*.snap
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
+        with:
+          snap: dist/dbptk-desktop-${{ github.event.client_payload.version }}.snap
+          release: stable
