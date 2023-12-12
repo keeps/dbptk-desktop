@@ -51,12 +51,17 @@ jobs:
           DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           FLOW: ${{ github.event.client_payload.flow }}
           RUNNER_OS: ${{ runner.os }}
-      - name: Cache dist
-        uses: actions/cache@v3
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v3
         with:
-          path: dist/*
-          key: ${{ github.event.client_payload.version }}-dist
-          enableCrossOsArchive: true
+          name: artifact
+          path: | 
+            dist/*
+            !dist/linux-unpacked/*
+            !dist/win-unpacked/*
+            !dist/win-ia32-unpacked/*
+            !dist/mac/*
+          retention-days: 1
 
   deploy:
     needs: build
@@ -64,13 +69,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Cache dist
-        uses: actions/cache/restore@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
         with:
-          path: dist/*
-          key: ${{ github.event.client_payload.version }}-dist
-          enableCrossOsArchive: true
-
+          path: artifact
       - name: Release to GitHub
         uses: softprops/action-gh-release@v1
         with:
