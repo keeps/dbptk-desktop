@@ -22,6 +22,7 @@ jobs:
         with:
           path: package.json
           key: ${{ github.event.client_payload.version }}-package.json
+          enableCrossOsArchive: true
   build:
     needs: preprocessing
     strategy:
@@ -42,7 +43,7 @@ jobs:
         with:
           path: package.json
           key: ${{ github.event.client_payload.version }}-package.json
-          fail-on-cache-miss: true
+          enableCrossOsArchive: true
       - name: Package
         run: yarn --link-duplicates --pure-lockfile && yarn dist
         env:
@@ -55,6 +56,7 @@ jobs:
         with:
           path: dist/*
           key: ${{ runner.os }}-${{ github.event.client_payload.version }}
+          enableCrossOsArchive: true
 
   deploy:
     needs: [build]
