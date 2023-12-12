@@ -61,6 +61,10 @@ jobs:
             !dist/win-unpacked/*
             !dist/win-ia32-unpacked/*
             !dist/mac/*
+            !dist/*.zip
+            !dist/*.blockmap
+            !dis/builder-debug.yml
+
           retention-days: 1
 
   deploy:
