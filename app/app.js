@@ -4,6 +4,7 @@ const Loading = require("./components/loading");
 const ApplicationMenu = require("./components/application-menu");
 const Settings = require('./components/settings');
 const Dbvtk = require("./components/dbvtk");
+const Solr = require("./components/solr");
 const settings = require('electron-settings');
 const log = require('electron-log');
 
@@ -27,7 +28,8 @@ app.on('ready', async function () {
     loading = new Loading()
     loading.show();
 
-    server = new Dbvtk();
+    //server = new Dbvtk();
+    server = new Solr();
     server.setLoadingScreen(loading);
 
     if(!debug){
