@@ -4,7 +4,6 @@ const waitOn = require('wait-on');
 const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
-const Loading = require("./loading");
 const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
 const MemoryManager = require('../helpers/memoryManagerHelper');
 const electronSettings = require('electron-settings');
@@ -43,18 +42,25 @@ module.exports = class Dbvtk {
         this.appUrl = "http://localhost";
         this.process = null;
         this.loading = null;
+        this.zookeeperHost = "localhost:9983";
     }
 
     setLoadingScreen(loading){
         this.loading = loading;
     }
 
+    setZookeeperHost(zooPort) {
+        this.zookeeperHost = "localhost:" + zooPort;
+    }
+
     getWarFile() {
-        let files = fs.readdirSync(app.getAppPath() + '/resources/war');
+        let resourceDir = app.getAppPath() + '/resources/war';
+        let files = fs.readdirSync(resourceDir);
 
         for (let i in files) {
             if (path.extname(files[i]) === '.war') {
                 this.filename = path.basename(files[i]);
+                log.info("DBPTK war at: " + resourceDir + '/' + this.filename);
                 break;
             }
         }
@@ -93,6 +99,12 @@ module.exports = class Dbvtk {
             "-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl",
             "-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl",
             "-Denv=desktop",
+            "--add-opens",
+            "java.base/java.util=ALL-UNNAMED",
+            "--add-opens",
+            "java.base/java.lang=ALL-UNNAMED",
+            "--add-opens",
+            "java.xml/com.sun.org.apache.xerces.internal.jaxp=ALL-UNNAMED"
         ];
 
         if (disableTimezone) {
@@ -115,7 +127,12 @@ module.exports = class Dbvtk {
         console.log(javaVMParameters)
 
         this.process = spawn(java.path, ['-jar'].concat(javaVMParameters).concat("resources/war/" + this.filename), {
-            cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/'
+            cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/',
+            env: {
+                ...process.env,
+                JAVA_HOME: java.home,
+                SOLR_ZOOKEEPER_HOSTS: this.zookeeperHost
+            }
         });
 
         const file = fs.createWriteStream(jvmLog, { flags: 'a' })
@@ -142,5 +159,13 @@ module.exports = class Dbvtk {
         log.info("Server at " + this.appUrl);
         await waitOn({ resources: [this.appUrl] });
         log.info('Server started!');
+    }
+
+    killProcess() {
+        if(this.process.pid != null){
+            log.info('Killing DBVTK process with PID: ' + this.process.pid);
+            process.kill(this.process.pid);
+        }
+        this.process = null;
     }
 }

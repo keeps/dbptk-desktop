@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#DBPTK_UI_VERSION=2.5.5
+#DBPTK_UI_VERSION=2.9.1
 #FLOW=main | staging
 
 function verify_checksum() {
@@ -15,7 +15,7 @@ function verify_checksum() {
 
     rm -f $API_CHECKSUM_FILE
 
-    RESPONSE=$(curl --write-out %{http_code} https://api.adoptopenjdk.net/v3/assets/latest/8/hotspot -o $API_CHECKSUM_FILE)
+    RESPONSE=$(curl --write-out %{http_code} https://api.adoptium.net/v3/assets/latest/21/hotspot -o $API_CHECKSUM_FILE)
     if [ "${RESPONSE}" != "200" ]; then
         echo "Failed to get asset information"
         return 1
@@ -69,9 +69,9 @@ for os in "${OS[@]}"; do
     fi
 
     for arch in "${ARCH[@]}"; do
-        JRE="https://api.adoptopenjdk.net/v3/binary/latest/8/ga/${os}/${arch}/jre/hotspot/normal/adoptopenjdk?project=jdk"
+        JRE="https://api.adoptium.net/v3/binary/latest/21/ga/${os}/${arch}/jre/hotspot/normal/adoptium?project=jdk"
         JRE_FOLDER="./resources/jre/${os}/${arch}"
-        JRE_TARGET="${JRE_FOLDER}/jre1.8.${ext}"
+        JRE_TARGET="${JRE_FOLDER}/jre21.${ext}"
 
         if [ ! -d "$JRE_FOLDER" ]; then
             mkdir -p "${JRE_FOLDER}"
@@ -106,3 +106,25 @@ for os in "${OS[@]}"; do
         fi
     done
 done
+
+# SOLR
+SOLR_VERSION=9.6.1
+SOLR_URL="https://www.apache.org/dyn/closer.lua/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}-slim.tgz?action=download"
+
+SOLR_FOLDER="./resources/solr"
+mkdir -p "${SOLR_FOLDER}"
+
+# Download the Solr version
+echo "Downloading Solr from $SOLR_URL..."
+
+response=$(curl --write-out %{http_code} -L "${SOLR_URL}" -o "${SOLR_FOLDER}/solr.tgz")
+if [ "${response}" != "200" ]; then
+    echo "Failed to download Solr. HTTP code: ${response}"
+    exit 1
+fi
+
+# Extract the downloaded file to the target directory
+echo "Extracting Solr to $SOLR_FOLDER..."
+tar -xzf "${SOLR_FOLDER}/solr.tgz" -C $SOLR_FOLDER --strip-components=1  >/dev/null 2>&1
+
+rm "${SOLR_FOLDER}/solr.tgz"

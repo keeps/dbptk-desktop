@@ -14,7 +14,8 @@
       "!dist/*"
     ],
     "asarUnpack": [
-      "resources/war/dbvtk.war"
+      "resources/war/dbvtk.war",
+      "resources/solr/**/*"
     ],
     "directories": {
       "buildResources": "buildResources"
@@ -95,15 +96,15 @@
   },
   "license": "LGPL-3.0-or-later",
   "devDependencies": {
-    "electron": "^28.0.0",
-    "electron-builder": "^23.0.3",
-    "electron-packager": "^17.1.2"
+    "electron": "^31.2.1",
+    "electron-builder": "^24.13.3",
+    "@electron/packager": "^18.3.3"
   },
   "dependencies": {
-    "electron-log": "^4.4.7",
-    "electron-settings": "^4.0.2",
-    "electron-updater": "^5.0.1",
-    "tmp": "^0.2.1",
+    "electron-log": "^5.1.6",
+    "electron-settings": "^4.0.4",
+    "electron-updater": "^6.2.1",
+    "tmp": "^0.2.3",
     "tree-kill": "^1.2.2",
     "wait-on": "^7.2.0"
   }
