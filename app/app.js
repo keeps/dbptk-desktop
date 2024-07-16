@@ -14,6 +14,7 @@ let windowHeight = 800;
 let mainWindow = null;
 let otherInstanceOpen = !app.requestSingleInstanceLock();
 let debug = process.env.TK_DEBUG;
+let solr = null
 let server = null
 let loading = null
 
@@ -28,11 +29,22 @@ app.on('ready', async function () {
     loading = new Loading()
     loading.show();
 
-    //server = new Dbvtk();
-    server = new Solr();
+    solr = new Solr();
+    try {
+        await solr.createProcess();
+    } catch (error) {
+        log.error(error);
+        dialog.showErrorBox(
+            'Oops! Something went wrong!',
+            error.message
+        )
+        closeApp()
+    }
+
+    server = new Dbvtk();
     server.setLoadingScreen(loading);
 
-    if(!debug){
+    if (!debug) {
         try {
             server.getWarFile();
             await server.createProcess()
@@ -48,6 +60,7 @@ app.on('ready', async function () {
         server.appUrl = server.appUrl + ":" + server.port;
         loading.hide();
     }
+
     initApp()
 });
 
@@ -79,13 +92,13 @@ ipcMain.on('OPEN_SETTINGS', (event, arg) => {
     new Settings().show()
 })
 
-function initApp(){
+function initApp() {
     const language = settings.getSync('language') != null ? settings.getSync('language') : "en";
     // Use 90% of screen size
     const screenSize = 0.9;
     const screen = require('electron').screen
     const { width, height } = screen.getPrimaryDisplay().workAreaSize
-    windowWidth = Math.round(width * screenSize );
+    windowWidth = Math.round(width * screenSize);
     windowHeight = Math.round(height * screenSize);
 
     // Open window with app
@@ -103,7 +116,7 @@ function initApp(){
         }
     });
 
-    if(process.platform === "linux" && !process.env.SNAP){
+    if (process.platform === "linux" && !process.env.SNAP) {
         mainWindow.setIcon(app.getAppPath() + '/buildResources/96x96.png')
     }
     mainWindow.unmaximize()
@@ -115,7 +128,7 @@ function initApp(){
         log.info('main loaded');
         mainWindow.show()
         loading.hide();
-        if(Settings.instance){
+        if (Settings.instance) {
             Settings.instance = null;
             new Settings().show()
         }
@@ -155,21 +168,16 @@ function initApp(){
 
 function closeApp(){
     loading.clear()
-    if (server.process != null) {
-        // Unregister all shortcuts.
-        globalShortcut.unregisterAll();
-        killProcess()
-    } else {
-        app.exit();
+    // Unregister all shortcuts.
+    globalShortcut.unregisterAll();
+
+    if (server != null) {
+        server.killProcess()
     }
-}
 
-function killProcess() {
-    log.info('Kill server process ' + server.process.pid);
+    if (solr != null) {
+        solr.killProcess()
+    }
 
-    require('tree-kill')(server.process.pid, "SIGTERM", function (err) {
-        log.info('Server process killed');
-        server.process = null;
-        app.exit();
-    });
+    app.exit();
 }
