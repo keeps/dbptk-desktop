@@ -1,5 +1,4 @@
 #!/bin/bash
-set -x
 
 #DBPTK_UI_VERSION=2.9.1
 #FLOW=main | staging
