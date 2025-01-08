@@ -3,43 +3,44 @@ const { spawn } = require('child_process');
 const waitOn = require('wait-on');
 const path = require('path');
 const fs = require('fs');
-const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
+const { deleteProcessFile, spawnSolrProcess } = require('../helpers/processHelper.js');
 const { findFreePort } = require('../helpers/netHelper');
 const log = require('electron-log');
+const CONSTANTS = require('../helpers/constants.js');
 
 module.exports = class SolrManager {
-    constructor() {
+    constructor(processInfoDir) {
         this.filename = null;
         this.port = 8983;
         this.zooPort = 9983;
         this.appUrl = "http://localhost";
         this.process = null;
         this.loading = null;
-        this.solrPID = null
+        this.solrHome = path.join(app.getPath('home'), CONSTANTS.DBVKT_DIRECTORY, CONSTANTS.INDEX_DIRECTORY);
+        this.processInfoDir = processInfoDir;
+        this.solrPortFile = path.join(this.processInfoDir, "solr.port");
     }
 
     async createProcess() {
-        let java = getjavaVersionAndPath();
-
-        const solrScript = process.platform === 'win32' ? 'solr.cmd' : 'solr';
-        const solrBinPath = path.join(app.getAppPath().replace('app.asar', 'app.asar.unpacked'), 'resources', 'solr', 'bin', solrScript);
-
-        this.port = await findFreePort(8983);
-        this.zooPort = this.port + 1000;
-        log.info(`Founded free port to use for solr ${this.port}`);
-
-        let solrHome = path.join(app.getPath('home'), ".dbvtk", "index");
-        let solrPidFile = path.join(solrHome, "solr-" + this.port + ".pid");
+        if (fs.existsSync(this.solrPortFile)) {
+            // if there's a port file, use that port
+            this.port = parseInt(fs.readFileSync(this.solrPortFile, 'utf8'));
+            log.info(`Starting Solr with port: ${this.port}`);
+        } else {
+            this.port = await findFreePort(8983);
+            log.info(`Found free port to use for Solr: ${this.port}`);
+        }
 
         if (process.env.SNAP_USER_COMMON) {
             log.info("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
-            solrHome = process.env.SNAP_USER_COMMON + "/.dbvtk/index";
+            this.solrHome = process.env.SNAP_USER_COMMON + CONSTANTS.DBVKT_DIRECTORY + "/" + CONSTANTS.INDEX_DIRECTORY;
+            this.processInfoDir = process.env.SNAP_USER_COMMON + CONSTANTS.DBVKT_DIRECTORY + "/" + CONSTANTS.PROCESS_INFO_DIRECTORY;
         }
 
-        if (!fs.existsSync(solrHome)) {
-            const dir = fs.mkdirSync(solrHome, { recursive: true });
+        if (!fs.existsSync(this.solrHome)) {
+            const dir = fs.mkdirSync(this.solrHome, { recursive: true });
             if (dir === undefined) {
-                throw new Error(`Failed to create Solr home directory at ${solrHome}`);
+                throw new Error(`Failed to create Solr home directory at ${this.solrHome}`);
             }
         }
 
@@ -47,43 +48,38 @@ module.exports = class SolrManager {
             "start",
             "-c",
             "-p", this.port,
-            "-s", solrHome
+            "-s", this.solrHome
         ];
 
-        console.log(solrArgs)
-
-        this.process = spawn(solrBinPath, solrArgs, {
-            cwd: app.getAppPath().replace('app.asar', 'app.asar.unpacked') + '/',
-            env: {
-                ...process.env,
-                JAVA_HOME: java.home,
-                SOLR_PID_DIR: solrHome,
-            }
-        });
-
-        this.process.on('error', (code, signal) => {
-            throw new Error('Failed to start Solr process:', err);
-        });
-
         // Waiting for solr to start
-        log.info('Wait until ' + solrPidFile + ' exists...');
-        await waitOn({ resources: [solrPidFile] });
+        log.info('Waiting for Solr process to start...');
+        this.process = spawnSolrProcess(solrArgs);
 
-        this.solrPID = parseInt(fs.readFileSync(solrPidFile));
-        log.info('Solr PID: ' + this.solrPID);
+        fs.writeFileSync(this.solrPortFile, this.port.toString(), 'utf8');
 
         let solrURL = `${this.appUrl}:${this.port}`;
-
-        log.info("Solr at " + solrURL);
         await waitOn({ resources: [solrURL] });
         log.info('Solr started!');
     }
 
-    killProcess() {
-        if(this.solrPID != null){
-            log.info('Killing Solr process with PID: ' + this.solrPID);
-            process.kill(this.solrPID);
+    async killProcess() {
+        if (this.port != null) {
+            log.info('Shutting down Solr service...');
+            let solrArgs = [
+                "stop",
+                "-p", this.port,
+            ];
+    
+            try {
+                await spawnSolrProcess(solrArgs, null, null);
+                log.info('Solr service shut down');
+                deleteProcessFile(this.solrPortFile);
+            } catch (error) {
+                log.error('Error shutting down Solr:', error);
+                throw error;
+            }
         }
+    
         this.process = null;
     }
-}
+};
