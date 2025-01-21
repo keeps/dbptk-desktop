@@ -7,6 +7,9 @@ const Dbvtk = require("./components/dbvtk");
 const Solr = require("./components/solr");
 const settings = require('electron-settings');
 const log = require('electron-log');
+const path = require('path');
+const fs = require('fs');
+const CONSTANTS = require('./helpers/constants.js');
 
 let title = 'Database Preservation Toolkit';
 let windowWidth = 1200;
@@ -41,7 +44,7 @@ app.on('ready', async function () {
         closeApp()
     }
 
-    server = new Dbvtk();
+    server = new Dbvtk(solr);
     server.setLoadingScreen(loading);
 
     if (!debug) {
@@ -166,17 +169,25 @@ function initApp() {
     })
 }
 
-function closeApp(){
+async function closeApp() {
     loading.clear()
     // Unregister all shortcuts.
     globalShortcut.unregisterAll();
 
     if (server != null) {
-        server.killProcess()
+        try {
+            await server.killProcess();
+        } catch (error) {
+            log.error('Error shutting down DBVTK:', error);
+        }
     }
 
     if (solr != null) {
-        solr.killProcess()
+        try {
+            await solr.killProcess();
+        } catch (error) {
+            log.error('Error shutting down Solr:', error);
+        }
     }
 
     app.exit();

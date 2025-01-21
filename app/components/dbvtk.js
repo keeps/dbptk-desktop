@@ -4,10 +4,12 @@ const waitOn = require('wait-on');
 const path = require('path');
 const fs = require('fs');
 const tmp = require('tmp');
-const { getjavaVersionAndPath, setJvmLog } = require('../helpers/javaHelper');
+const { getjavaInfo, setJvmLog } = require('../helpers/javaHelper');
+const { pidIsRunning, deleteProcessFile, createProcessInfoDir } = require('../helpers/processHelper.js');
 const MemoryManager = require('../helpers/memoryManagerHelper');
 const electronSettings = require('electron-settings');
 const log = require('electron-log');
+const CONSTANTS = require('../helpers/constants.js');
 const ipc = require('electron').ipcMain
 const dialog = require('electron').dialog
 
@@ -36,13 +38,17 @@ ipc.on('show-confirmation-dialog', function (event, options) {
 })
 
 module.exports = class Dbvtk {
-    constructor() {
+    constructor(solr) {
         this.filename = null;
         this.port = 8080;
         this.appUrl = "http://localhost";
         this.process = null;
         this.loading = null;
-        this.zookeeperHost = "localhost:9983";
+        this.solr = solr;
+        this.zookeeperHost = "localhost:19984";
+        this.processInfoDir = null;
+        this.serverPortFile = null;
+        this.serverPidFile = null;
     }
 
     setLoadingScreen(loading){
@@ -71,13 +77,29 @@ module.exports = class Dbvtk {
     }
 
     async createProcess() {
-        let java = getjavaVersionAndPath();
+        this.processInfoDir = await createProcessInfoDir();
+        this.serverPortFile = path.join(this.processInfoDir, "dbptk.port");
+        this.serverPidFile = path.join(this.processInfoDir, "dbptk.pid");
+
+        // Check if the dbptk PID file exists
+        if (fs.existsSync(this.serverPidFile)) {
+            // if the process is not running, delete the port file so it can be created by dbptk
+            // the PID file will then be updated
+            if (!pidIsRunning(parseInt(fs.readFileSync(this.serverPidFile, 'utf8')))) {
+                fs.unlink(this.serverPortFile, (err) => {
+                    if (err) {
+                        console.error(`Error deleting the file: ${err.message}`);
+                    }
+                });
+            }
+        }
+
+        this.setZookeeperHost(this.solr.zooPort);
+
+        let java = getjavaInfo();
 
         const dbptkDesktopTmpDir = tmp.dirSync({ template: 'dbptkDesktopTmpDir-XXXXXX' });
         log.info("DBPTK Desktop tmp dir at " + dbptkDesktopTmpDir.name)
-
-        let serverPortFile = tmp.tmpNameSync({dir: dbptkDesktopTmpDir.name, template: 'port-XXXXXX' });
-        log.info("Port file at " + serverPortFile);
 
         let jvmLog = tmp.tmpNameSync({dir: dbptkDesktopTmpDir.name, template: 'jvm-XXXXXX.log' });
         setJvmLog(jvmLog);
@@ -95,7 +117,7 @@ module.exports = class Dbvtk {
         let javaVMParameters = [
             "-Dserver.port=0",
             "-Dfile.encoding=UTF-8",
-            "-Dserver.port.file=" + serverPortFile,
+            "-Dserver.port.file=" + this.serverPortFile,
             "-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl",
             "-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl",
             "-Denv=desktop",
@@ -111,7 +133,7 @@ module.exports = class Dbvtk {
             javaVMParameters.push("-Duser.timezone=GMT");
         }
 
-        if ( maxHeapMemory != null ) {
+        if (maxHeapMemory != null) {
             javaVMParameters.push("-Xmx" + maxHeapMemory)
         }
 
@@ -119,7 +141,7 @@ module.exports = class Dbvtk {
             javaVMParameters.push("-Djava.io.tmpdir=" + tmpDir);
         }
 
-        if(process.env.SNAP_USER_COMMON){
+        if (process.env.SNAP_USER_COMMON) {
             log.info("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
             javaVMParameters.push("-Ddbvtk.home=" + process.env.SNAP_USER_COMMON);
         }
@@ -131,7 +153,8 @@ module.exports = class Dbvtk {
             env: {
                 ...process.env,
                 JAVA_HOME: java.home,
-                SOLR_ZOOKEEPER_HOSTS: this.zookeeperHost
+                SOLR_ZOOKEEPER_HOSTS: this.zookeeperHost,
+                DBVTK_HOME: path.join(app.getPath('home'), CONSTANTS.DBVKT_DIRECTORY),
             }
         });
 
@@ -145,26 +168,35 @@ module.exports = class Dbvtk {
             log.error('log file');    
             throw new Error('DBVTK could not be started');
         });
+
         log.info('Server PID: ' + this.process.pid);
+        fs.writeFileSync(this.serverPidFile, this.process.pid.toString(), 'utf8');
+        log.info("PID file at " + this.serverPidFile);
 
         // Waiting for app to start
-        log.info('Wait until ' + serverPortFile + ' exists...');
-        await waitOn({ resources: [serverPortFile] });
+        log.info('Wait until ' + this.serverPortFile + ' exists...');
+        await waitOn({ resources: [this.serverPortFile] });
+        log.info("Port file at " + this.serverPortFile);
 
-        this.port = parseInt(fs.readFileSync(serverPortFile));
-        fs.unlink(serverPortFile, (err) => { });
+        this.port = parseInt(fs.readFileSync(this.serverPortFile));
 
         this.appUrl = `${this.appUrl}:${this.port}`;
 
         log.info("Server at " + this.appUrl);
         await waitOn({ resources: [this.appUrl] });
-        log.info('Server started!');
+        log.info('Server started!');            
     }
 
-    killProcess() {
-        if(this.process.pid != null){
+    async killProcess() {
+        if (this.process.pid != null) {
             log.info('Killing DBVTK process with PID: ' + this.process.pid);
-            process.kill(this.process.pid);
+            try {
+                process.kill(this.process.pid);
+                deleteProcessFile(this.serverPortFile);
+                deleteProcessFile(this.serverPidFile);
+            } catch (error) {
+                log.error('Error killing DBVTK process:', error);
+            }
         }
         this.process = null;
     }
