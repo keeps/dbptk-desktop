@@ -54,7 +54,7 @@ jobs:
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifact
+          name: artifact-${{ runner.os }}
           path: | 
             dist/*
             !dist/linux-unpacked/*
