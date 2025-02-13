@@ -82,10 +82,12 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ${{steps.download.outputs.download-path}}/artifact/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
-            ${{steps.download.outputs.download-path}}/artifact/dbptk-desktop-${{ github.event.client_payload.version }}.exe
-            ${{steps.download.outputs.download-path}}/artifact/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
-            ${{steps.download.outputs.download-path}}/artifact/latest*
+            ${{steps.download.outputs.download-path}}/artifact-Linux/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
+            ${{steps.download.outputs.download-path}}/artifact-Windows/dbptk-desktop-${{ github.event.client_payload.version }}.exe
+            ${{steps.download.outputs.download-path}}/artifact-macOS/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
+            ${{steps.download.outputs.download-path}}/artifact-macOS/latest*
+            ${{steps.download.outputs.download-path}}/artifact-Windows/latest*
+            ${{steps.download.outputs.download-path}}/artifact-Linux/latest*
           name: Version ${{ github.event.client_payload.version }}
           tag_name: v${{ github.event.client_payload.version }}
           draft: true
@@ -97,7 +99,7 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
         with:
-          snap: ${{steps.download.outputs.download-path}}/artifact/dbptk-desktop-${{ github.event.client_payload.version }}.snap
+          snap: ${{steps.download.outputs.download-path}}/artifact-Linux/dbptk-desktop-${{ github.event.client_payload.version }}.snap
           release: stable
 
   update:
