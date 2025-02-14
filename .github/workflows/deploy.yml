@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Update package.json
         run: |
           cat package.json | jq ".version = \"$RELEASE_VERSION\"" | jq ".dbvtkVersion = \"$RELEASE_VERSION\"" > tmp
@@ -18,7 +18,7 @@ jobs:
         env:
           RELEASE_VERSION: ${{ github.event.client_payload.version }}
       - name: Cache package.json
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: package.json
           key: ${{ github.event.client_payload.version }}-package.json
@@ -33,13 +33,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
       - name: Cache restore
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: package.json
           key: ${{ github.event.client_payload.version }}-package.json
@@ -79,7 +79,7 @@ jobs:
         with:
           path: dist
       - name: Release to GitHub
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             ${{steps.download.outputs.download-path}}/artifact-Linux/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
@@ -108,7 +108,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set GitHub config
         run: |
           git config --local user.email "mguimaraes@keep.pt"
