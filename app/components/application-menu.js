@@ -94,7 +94,16 @@ module.exports = class ApplicationMenu {
                 this.language = "pt_PT"
                 win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
               }
-            }
+            },
+            {
+              label: 'Dansk',
+              type: 'radio',
+              checked: (electronSettings.getSync('language') == 'da_DA'),
+              click: () => {
+                this.language = "da_DA"
+                win.loadURL(buildUrl(win, this.language, "#" + win.getURL().split("#")[1]));
+              }
+            }            
           ]
         },
         {
