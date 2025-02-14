@@ -40,8 +40,8 @@ module.exports = class SolrManager {
 
         if (process.env.SNAP_USER_COMMON) {
             log.info("SNAP_USER_COMMON: " + process.env.SNAP_USER_COMMON);
-            this.solrHome = process.env.SNAP_USER_COMMON + CONSTANTS.DBVKT_DIRECTORY + "/" + CONSTANTS.INDEX_DIRECTORY;
-            this.processInfoDir = process.env.SNAP_USER_COMMON + CONSTANTS.DBVKT_DIRECTORY + "/" + CONSTANTS.PROCESS_INFO_DIRECTORY;
+            this.solrHome = process.env.SNAP_USER_COMMON + "/" + CONSTANTS.DBVKT_DIRECTORY + "/" + CONSTANTS.INDEX_DIRECTORY;
+            this.processInfoDir = process.env.SNAP_USER_COMMON + "/" + CONSTANTS.DBVKT_DIRECTORY + "/" + CONSTANTS.PROCESS_INFO_DIRECTORY;
         }
 
         if (!fs.existsSync(this.solrHome)) {
