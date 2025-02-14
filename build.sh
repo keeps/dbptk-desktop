@@ -125,6 +125,6 @@ fi
 
 # Extract the downloaded file to the target directory
 echo "Extracting Solr to $SOLR_FOLDER..."
-tar -xzf "${SOLR_FOLDER}/solr.tgz" -C $SOLR_FOLDER --strip-components=1  >/dev/null 2>&1
+tar -xzf "${SOLR_FOLDER}/solr.tgz" -C $SOLR_FOLDER --strip-components=1
 
 rm "${SOLR_FOLDER}/solr.tgz"
