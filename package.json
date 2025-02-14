@@ -23,6 +23,15 @@
         "resources/solr/**/*",
         "buildResources/*"
       ],
+      "target": [
+        {
+          "target": "default",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
       "category": "public.app-category.utilities",
       "asarUnpack": [
         "resources/jre/mac/${arch}",
@@ -76,7 +85,6 @@
         {
           "target": "nsis",
           "arch": [
-            "ia32",
             "x64"
           ]
         }
