@@ -10,29 +10,32 @@
     "artifactName": "${name}-${version}.${ext}",
     "files": [
       "**/*",
-      "!resources/jre/*",
+      "!resources/*",
       "!dist/*"
-    ],
-    "asarUnpack": [
-      "resources/war/dbvtk.war",
-      "resources/solr/**/*"
     ],
     "directories": {
       "buildResources": "buildResources"
     },
     "mac": {
       "files": [
-        "resources/jre/mac/${arch}/**/*"
+        "resources/jre/mac/${arch}/**/*",
+        "resources/war/dbvtk.war",
+        "resources/solr/**/*",
+        "buildResources/*"
       ],
       "category": "public.app-category.utilities",
       "asarUnpack": [
-        "resources/jre/mac/${arch}"
+        "resources/jre/mac/${arch}",
+        "resources/war/dbvtk.war",
+        "resources/solr/**/*"
       ],
       "icon": "icon.icns"
     },
     "linux": {
       "files": [
         "resources/jre/linux/${arch}/**/*",
+        "resources/war/dbvtk.war",
+        "resources/solr/**/*",
         "buildResources/*"
       ],
       "target": [
@@ -40,7 +43,9 @@
         "snap"
       ],
       "asarUnpack": [
-        "resources/jre/linux/${arch}"
+        "resources/jre/linux/${arch}",
+        "resources/war/dbvtk.war",
+        "resources/solr/"
       ],
       "icon": "icon.png"
     },
@@ -62,7 +67,10 @@
     },
     "win": {
       "files": [
-        "resources/jre/windows/${arch}/**/*"
+        "resources/jre/windows/${arch}/**/*",
+        "resources/war/dbvtk.war",
+        "resources/solr/**/*",
+        "buildResources/*"
       ],
       "target": [
         {
@@ -74,7 +82,9 @@
         }
       ],
       "asarUnpack": [
-        "resources/jre/windows/${arch}"
+        "resources/jre/windows/${arch}",
+        "resources/war/dbvtk.war",
+        "resources/solr/"
       ],
       "icon": "icon.ico"
     },

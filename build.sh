@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#DBPTK_UI_VERSION=2.9.1
+#DBPTK_UI_VERSION=3.0.0
 #FLOW=main | staging
 
 function verify_checksum() {
@@ -40,7 +40,7 @@ function verify_checksum() {
 # if is staging only downloads the JRE files
 if [ "$FLOW" == "main" ]; then
 
-    GITHUB_PACKAGES_DL_LINK="https://maven.pkg.github.com/keeps/dbptk-ui/com/databasepreservation/visualization/dbvtk/${DBPTK_UI_VERSION}/dbvtk-${DBPTK_UI_VERSION}.war "
+    GITHUB_PACKAGES_DL_LINK="https://maven.pkg.github.com/keeps/dbptk-ui/com/databasepreservation/visualization/dbvtk/${DBPTK_UI_VERSION}/dbvtk-${DBPTK_UI_VERSION}.war"
     DBPTK_UI_WAR_TARGET="./resources/war/dbvtk.war"
 
     if [ ! -f $DBPTK_UI_WAR_TARGET ]; then
@@ -108,7 +108,7 @@ for os in "${OS[@]}"; do
 done
 
 # SOLR
-SOLR_VERSION=9.6.1
+SOLR_VERSION=9.8.0
 SOLR_URL="https://www.apache.org/dyn/closer.lua/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}-slim.tgz?action=download"
 
 SOLR_FOLDER="./resources/solr"
@@ -127,4 +127,4 @@ fi
 echo "Extracting Solr to $SOLR_FOLDER..."
 tar -xzf "${SOLR_FOLDER}/solr.tgz" -C $SOLR_FOLDER --strip-components=1
 
-rm "${SOLR_FOLDER}/solr.tgz"
+rm -f "${SOLR_FOLDER}/solr.tgz"
