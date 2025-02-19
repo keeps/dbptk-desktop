@@ -23,7 +23,7 @@
         "resources/solr/**/*",
         "buildResources/*"
       ],
-    "target": [
+      "target": [
         {
           "target": "default",
           "arch": [
@@ -31,7 +31,7 @@
             "arm64"
           ]
         }
-      ],      
+      ],
       "category": "public.app-category.utilities",
       "asarUnpack": [
         "resources/jre/mac/${arch}",
