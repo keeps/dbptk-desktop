@@ -27,7 +27,7 @@ jobs:
     needs: preprocessing
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, macos-latest-large, windows-latest]
 
     runs-on: ${{ matrix.os }}
 

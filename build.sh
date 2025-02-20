@@ -68,6 +68,10 @@ for os in "${OS[@]}"; do
         ext="zip"
     fi
 
+    if [[ ${os} == "mac" ]]; then
+        ARCH=("x64" "aarch64")
+    fi
+
     for arch in "${ARCH[@]}"; do
         JRE="https://api.adoptium.net/v3/binary/latest/21/ga/${os}/${arch}/jre/hotspot/normal/adoptium?project=jdk"
         JRE_FOLDER="./resources/jre/${os}/${arch}"
