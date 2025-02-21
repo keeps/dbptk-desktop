@@ -94,7 +94,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ${{steps.download.outputs.download-path}}/artifact-*/*.{AppImage,exe,dmg}
+            ${{steps.download.outputs.download-path}}/artifact-*/*.AppImage
+            ${{steps.download.outputs.download-path}}/artifact-*/*.exe
+            ${{steps.download.outputs.download-path}}/artifact-*/*.dmg
             ${{steps.download.outputs.download-path}}/artifact-*/latest*
           name: Version ${{ github.event.client_payload.version }}
           tag_name: v${{ github.event.client_payload.version }}
