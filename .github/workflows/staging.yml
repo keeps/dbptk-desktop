@@ -24,7 +24,7 @@ jobs:
 
         # Download .war from GitHub workflow artifact
       - name: Download WAR binary from GitHub artifact
-        uses: dawidd6/action-download-artifact@v2
+        uses: dawidd6/action-download-artifact@v6
         with: 
           workflow: staging.yml
           branch: staging
