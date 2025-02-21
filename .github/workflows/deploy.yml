@@ -71,6 +71,8 @@ jobs:
             !dist/win-unpacked/*
             !dist/win-ia32-unpacked/*
             !dist/mac/*
+            !dist/mac-x64/*
+            !dist/mac-arm64/*
             !dist/*.zip
             !dist/*.blockmap
             !dis/builder-debug.yml
