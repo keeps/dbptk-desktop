@@ -15,7 +15,10 @@
     ],
     "directories": {
       "buildResources": "buildResources"
-    },  
+    },
+    "dmg": {
+      "artifactName": "${name}-${version}-${arch}.${ext}"
+    },
     "mac": {
       "files": [
         "resources/jre/mac/${arch}/**/*",
