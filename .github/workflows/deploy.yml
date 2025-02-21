@@ -30,7 +30,9 @@ jobs:
         os: [ubuntu-latest, macos-latest, self-hosted, windows-latest]
         include:
           - os: ubuntu-latest
+            arch: x64
           - os: windows-latest
+            arch: x64
           - os: macos-latest
             arch: arm64
           - os: self-hosted
@@ -58,10 +60,11 @@ jobs:
           DBPTK_UI_VERSION: ${{ github.event.client_payload.version }}
           FLOW: ${{ github.event.client_payload.flow }}
           RUNNER_OS: ${{ runner.os }}
+          RUNNER_ARCH: ${{ matrix.arch }}
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifact-${{ runner.os }}${{ matrix.arch }}
+          name: artifact-${{ runner.os }}-${{ matrix.arch }}
           path: | 
             dist/*
             !dist/linux-unpacked/*
@@ -91,10 +94,10 @@ jobs:
           files: |
             ${{steps.download.outputs.download-path}}/artifact-Linux/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
             ${{steps.download.outputs.download-path}}/artifact-Windows/dbptk-desktop-${{ github.event.client_payload.version }}.exe
-            ${{steps.download.outputs.download-path}}/artifact-macOSarm64/dbptk-desktop-${{ github.event.client_payload.version }}arm64.dmg
-            ${{steps.download.outputs.download-path}}/artifact-macOSx64/dbptk-desktop-${{ github.event.client_payload.version }}x64.dmg
-            ${{steps.download.outputs.download-path}}/artifact-macOSarm64/latest*
-            ${{steps.download.outputs.download-path}}/artifact-macOSx64/latest*
+            ${{steps.download.outputs.download-path}}/artifact-macOSarm64/dbptk-desktop-${{ github.event.client_payload.version }}-arm64.dmg
+            ${{steps.download.outputs.download-path}}/artifact-macOSx64/dbptk-desktop-${{ github.event.client_payload.version }}-x64.dmg
+            ${{steps.download.outputs.download-path}}/artifact-macOS-arm64/latest*
+            ${{steps.download.outputs.download-path}}/artifact-macOS-x64/latest*
             ${{steps.download.outputs.download-path}}/artifact-Windows/latest*
             ${{steps.download.outputs.download-path}}/artifact-Linux/latest*
           name: Version ${{ github.event.client_payload.version }}
