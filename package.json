@@ -75,6 +75,7 @@
       ]
     },
     "win": {
+      "buildUniversalInstaller": false,
       "files": [
         "resources/jre/windows/${arch}/**/*",
         "resources/war/dbvtk.war",
