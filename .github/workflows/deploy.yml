@@ -111,7 +111,7 @@ jobs:
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.SNAP_STORE_LOGIN }}
         with:
-          snap: ${{steps.download.outputs.download-path}}/artifact-Linux/dbptk-desktop-${{ github.event.client_payload.version }}.snap
+          snap: ${{steps.download.outputs.download-path}}/artifact-Linux-x64/dbptk-desktop-${{ github.event.client_payload.version }}.snap
           release: stable
 
   update:
