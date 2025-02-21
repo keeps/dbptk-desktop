@@ -28,7 +28,6 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, self-hosted, windows-latest]
-        arch: [x64, arm64]
         include:
           - os: ubuntu-latest
           - os: windows-latest
