@@ -27,7 +27,15 @@ jobs:
     needs: preprocessing
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, self-hosted, windows-latest]
+    os: [ubuntu-latest, macos-latest, self-hosted, windows-latest]
+    arch: [x64, arm64]
+    include:
+      - os: ubuntu-latest
+      - os: windows-latest
+      - os: macos-latest
+        arch: arm64
+      - os: self-hosted
+        arch: x64
 
     runs-on: ${{ matrix.os }}
 
@@ -54,7 +62,7 @@ jobs:
       - name: Upload dist artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: artifact-${{ runner.os }}
+          name: artifact-${{ runner.os }}${{ matrix.arch }}
           path: | 
             dist/*
             !dist/linux-unpacked/*
@@ -84,8 +92,10 @@ jobs:
           files: |
             ${{steps.download.outputs.download-path}}/artifact-Linux/dbptk-desktop-${{ github.event.client_payload.version }}.AppImage
             ${{steps.download.outputs.download-path}}/artifact-Windows/dbptk-desktop-${{ github.event.client_payload.version }}.exe
-            ${{steps.download.outputs.download-path}}/artifact-macOS/dbptk-desktop-${{ github.event.client_payload.version }}.dmg
-            ${{steps.download.outputs.download-path}}/artifact-macOS/latest*
+            ${{steps.download.outputs.download-path}}/artifact-macOSarm64/dbptk-desktop-${{ github.event.client_payload.version }}arm64.dmg
+            ${{steps.download.outputs.download-path}}/artifact-macOSx64/dbptk-desktop-${{ github.event.client_payload.version }}x64.dmg
+            ${{steps.download.outputs.download-path}}/artifact-macOSarm64/latest*
+            ${{steps.download.outputs.download-path}}/artifact-macOSx64/latest*
             ${{steps.download.outputs.download-path}}/artifact-Windows/latest*
             ${{steps.download.outputs.download-path}}/artifact-Linux/latest*
           name: Version ${{ github.event.client_payload.version }}
