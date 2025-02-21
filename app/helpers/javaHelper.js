@@ -10,16 +10,20 @@ module.exports.getjavaInfo = function () {
     if (platform === 'win32') {
         java.os = "windows"
         java.exec = "bin/java.exe"
+        java.home = app.getAppPath().replace('app.asar', 'app.asar.unpacked') + `/resources/jre/${java.os}/${process.arch}`
     } else if (platform === 'darwin') {
         java.os = "mac"
         java.exec = "Contents/Home/bin/java"
+        java.home = app.getAppPath().replace('app.asar', 'app.asar.unpacked') + `/resources/jre/${java.os}/${process.arch}` + '/Contents/Home'
+    } else {
+        java.exec = "bin/java"
+        java.home = app.getAppPath().replace('app.asar', 'app.asar.unpacked') + `/resources/jre/${java.os}/${process.arch}`
     }
 
     let path = `/resources/jre/${java.os}/${process.arch}/${java.exec}`
     java.path = app.getAppPath().replace('app.asar', 'app.asar.unpacked') + path;
 
     java.version = getJavaVersion(java.path);
-    java.home = app.getAppPath().replace('app.asar', 'app.asar.unpacked') + `/resources/jre/${java.os}/${process.arch}`
 
     log.info("Java version is: " + java.version);
     log.info("Java Path is: " + java.path);
