@@ -18,7 +18,8 @@
     },
     "mac": {
       "files": [
-        "resources/jre/mac/${arch}/**/*",
+        "resources/jre/mac/x64/**/*",
+        "resources/jre/mac/arm64/**/*",
         "resources/war/dbvtk.war",
         "resources/solr/**/*",
         "buildResources/*"
@@ -34,7 +35,8 @@
       ],
       "category": "public.app-category.utilities",
       "asarUnpack": [
-        "resources/jre/mac/${arch}",
+        "resources/jre/mac/x64",
+        "resources/jre/mac/arm64",
         "resources/war/dbvtk.war",
         "resources/solr/**/*"
       ],

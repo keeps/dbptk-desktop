@@ -13,6 +13,10 @@ function verify_checksum() {
     DL_CHECKSUM=$5
     API_CHECKSUM_FILE=/tmp/assets.json
 
+    if [[ ${ARCH} == "arm64" ]]; then
+        ARCH="aarch64"
+    fi 
+
     rm -f $API_CHECKSUM_FILE
 
     RESPONSE=$(curl --write-out %{http_code} https://api.adoptium.net/v3/assets/latest/21/hotspot -o $API_CHECKSUM_FILE)
@@ -74,9 +78,13 @@ for os in "${OS[@]}"; do
 
     for arch in "${ARCH[@]}"; do
         JRE="https://api.adoptium.net/v3/binary/latest/21/ga/${os}/${arch}/jre/hotspot/normal/adoptium?project=jdk"
+
+        if [[ ${arch} == "aarch64" ]]; then
+            arch="arm64"
+        fi
+        
         JRE_FOLDER="./resources/jre/${os}/${arch}"
         JRE_TARGET="${JRE_FOLDER}/jre21.${ext}"
-
         if [ ! -d "$JRE_FOLDER" ]; then
             mkdir -p "${JRE_FOLDER}"
             response=$(curl --write-out %{http_code} -L $JRE -o $JRE_TARGET)
