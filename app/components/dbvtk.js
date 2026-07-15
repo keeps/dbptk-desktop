@@ -112,6 +112,7 @@ module.exports = class Dbvtk {
         let maxHeapMemory = memoryManager.getMaxHeapMemorySettings();
         let tmpDir = electronSettings.getSync('tmpDir');
         let disableTimezone = electronSettings.getSync('disableTimezone');
+        let dbptkHomePath = path.join(app.getPath('home'), CONSTANTS.DBVKT_DIRECTORY);
 
         // Ask for a random unassigned port and to write it down in serverPortFile
         let javaVMParameters = [
@@ -120,6 +121,7 @@ module.exports = class Dbvtk {
             "-Dserver.port.file=" + this.serverPortFile,
             "-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl",
             "-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl",
+            `-DSPRING_DATASOURCE_URL=jdbc:h2:file:${dbptkHomePath}/dbvtk-h2`,
             "-Denv=desktop",
             "--add-opens",
             "java.base/java.util=ALL-UNNAMED",
