@@ -53,14 +53,16 @@ module.exports = class SolrManager {
 
         let solrArgs = [
             "start",
-            "-c",
             "-p", this.port,
-            "-s", this.solrHome
+            "--solr-home", this.solrHome
         ];
 
         // Waiting for solr to start
         log.info('Waiting for Solr process to start...');
-        this.process = this.spawnSolrProcess(solrArgs);
+        this.process = this.spawnSolrProcess(solrArgs).catch(err => {
+            log.error('Failed to spawn Solr process:', err);
+            throw err;
+        });
 
         fs.writeFileSync(this.solrPortFile, this.port.toString(), 'utf8');
 

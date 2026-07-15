@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#DBPTK_UI_VERSION=3.0.0
+#DBPTK_UI_VERSION=4.0.0
 #FLOW=main | staging
 
 function verify_checksum() {
@@ -120,7 +120,7 @@ for os in "${OS[@]}"; do
 done
 
 # SOLR
-SOLR_VERSION=9.8.0
+SOLR_VERSION=10.0.0
 SOLR_URL="https://www.apache.org/dyn/closer.lua/solr/solr/${SOLR_VERSION}/solr-${SOLR_VERSION}-slim.tgz?action=download"
 
 SOLR_FOLDER="./resources/solr"
